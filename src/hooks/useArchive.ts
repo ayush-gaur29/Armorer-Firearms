@@ -14,10 +14,16 @@ import {
   type HeroSection,
 } from "@/lib/fallbacks";
 
+// Loose shape for raw Firestore documents; every field is optional/unknown.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyDoc = { [key: string]: any };
+type AnyDoc = Partial<Record<
+  | "id" | "images" | "image" | "name" | "maker" | "model" | "caliber" | "year" | "price"
+  | "description" | "history" | "condition" | "category" | "status" | "featured" | "serial"
+  | "active" | "title" | "heading" | "subtitle" | "text" | "imageUrl" | "backgroundImage"
+  | "logoUrl" | "ctaPrimary" | "ctaSecondary" | "buttonText" | "tagline" | "displayOrder",
+  any
+>>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function normalizeFirearm(id: string, d: AnyDoc): Firearm {
   const rawImages = d.images;
   const images = Array.isArray(rawImages)
