@@ -36,7 +36,7 @@ function HomePage() {
           <div className="max-w-3xl">
             <p className="font-mono text-[0.62rem] tracking-[0.3em] text-brass">ACCESSION NO. AF-HERO · {hero.tagline}</p>
             {hero.logoUrl && (
-              <img src={hero.logoUrl} alt="Armorer Firearms" className="mt-6 h-14 w-auto object-contain" width={200} height={56} />
+              <img src={hero.logoUrl} alt="Armorer Firearms" className="mt-6 h-14 w-auto object-contain" width={200} height={56} onError={(e) => { e.currentTarget.style.display = "none"; }} />
             )}
             <h1 className="mt-6 font-serif text-[clamp(2.6rem,7vw,5.5rem)] leading-[0.98] text-ivory">{hero.title}</h1>
             <p className="mt-7 max-w-xl text-base leading-relaxed text-parchment/85 sm:text-lg">{hero.subtitle}</p>
