@@ -7,13 +7,13 @@ export interface HeroSection {
   id: string;
   title: string;
   subtitle: string;
-  tagline?: string;
+  tagline?: string | undefined;
   imageUrl: string;
   logoUrl?: string | undefined;
-  ctaPrimary?: string;
-  ctaSecondary?: string;
-  active?: boolean;
-  displayOrder?: number;
+  ctaPrimary?: string | undefined;
+  ctaSecondary?: string | undefined;
+  active?: boolean | undefined;
+  displayOrder?: number | undefined;
 }
 
 export interface CollectionIntro {
@@ -27,8 +27,8 @@ export interface AboutContent {
   history: string;
   founded: string | number;
   location: string;
-  philosophy?: string;
-  standards?: string;
+  philosophy?: string | undefined;
+  standards?: string | undefined;
 }
 
 export interface ContactContent {
@@ -37,7 +37,7 @@ export interface ContactContent {
   phone: string;
   email: string;
   hours: string;
-  note?: string;
+  note?: string | undefined;
 }
 
 export interface Firearm {
