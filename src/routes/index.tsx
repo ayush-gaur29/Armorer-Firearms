@@ -57,18 +57,30 @@ function HomePage() {
         </div>
         <div className="mx-auto w-full max-w-7xl px-5 pt-36 pb-16 sm:px-8 sm:pb-24">
           <div className="max-w-3xl">
-            <div className="hero-enter-eyebrow mb-5 sm:mb-6">
+            {/* Mobile logo: sits cleanly above heading with tight spacing to prevent crowding on small viewports */}
+            <div className="hero-enter-eyebrow mb-4 sm:hidden">
               <img
                 src={logoImg}
                 alt="Armorer Firearms"
-                width={72}
-                height={72}
-                className="size-12 sm:size-14 md:size-16 lg:size-[4.5rem] object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]"
+                width={56}
+                height={56}
+                className="size-[54px] object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]"
               />
             </div>
+
             <h1 className="hero-enter-heading font-serif text-[clamp(2.4rem,6vw,5.25rem)] font-normal leading-[1.04] tracking-tight text-ivory drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
               <span className="block">A Private Archive of</span>
-              <span className="block text-ivory">Historic Arms</span>
+              <span className="flex flex-wrap items-center gap-4 sm:gap-6 md:gap-7 text-ivory">
+                <span>Historic Arms</span>
+                {/* Desktop & Tablet logo: visually integrated into the heading composition as a refined maker's mark */}
+                <img
+                  src={logoImg}
+                  alt="Armorer Firearms"
+                  width={92}
+                  height={92}
+                  className="hidden sm:inline-block size-16 md:size-20 lg:size-[5.5rem] object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] shrink-0 transition-transform duration-500 hover:scale-105"
+                />
+              </span>
             </h1>
             <p className="hero-enter-description mt-7 max-w-xl text-base font-medium leading-relaxed text-[#E8E3D9] [text-shadow:0_1px_8px_rgba(0,0,0,0.7)] sm:text-lg">
               {hero.subtitle}
