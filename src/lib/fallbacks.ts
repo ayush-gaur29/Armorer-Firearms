@@ -9,7 +9,7 @@ export interface HeroSection {
   subtitle: string;
   tagline?: string;
   imageUrl: string;
-  logoUrl?: string;
+  logoUrl?: string | undefined;
   ctaPrimary?: string;
   ctaSecondary?: string;
   active?: boolean;
@@ -47,15 +47,15 @@ export interface Firearm {
   model: string;
   caliber: string;
   year: number | string;
-  price?: number | string;
+  price?: number | string | undefined;
   description: string;
-  history?: string;
+  history?: string | undefined;
   condition: string;
   category: string;
-  status?: string;
+  status?: string | undefined;
   images: string[];
-  featured?: boolean;
-  serial?: string;
+  featured?: boolean | undefined;
+  serial?: string | undefined;
 }
 
 export const FALLBACK_HERO: HeroSection = {

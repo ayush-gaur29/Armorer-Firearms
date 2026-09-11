@@ -14,7 +14,11 @@ import {
   type HeroSection,
 } from "@/lib/fallbacks";
 
-function normalizeFirearm(id: string, d: Record<string, unknown>): Firearm {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyDoc = { [key: string]: any };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function normalizeFirearm(id: string, d: AnyDoc): Firearm {
   const rawImages = d.images;
   const images = Array.isArray(rawImages)
     ? rawImages.filter((x): x is string => typeof x === "string" && x.length > 0)
@@ -52,8 +56,8 @@ export function useHero() {
         unsub = fs.onSnapshot(
           q,
           (snap) => {
-            const docs = snap.docs.map((s) => ({ id: s.id, ...(s.data() as Record<string, unknown>) }));
-            const pick = (docs.find((x) => x.active !== false) ?? docs[0]) as Record<string, unknown> | undefined;
+            const docs = snap.docs.map((s) => ({ id: s.id, ...(s.data() as AnyDoc) }));
+            const pick = (docs.find((x) => x.active !== false) ?? docs[0]) as AnyDoc | undefined;
             if (!pick) return;
             setHero({
               id: String(pick.id),
@@ -121,7 +125,7 @@ export function useFirearms() {
           fs.collection(db, "firearms"),
           (snap) => {
             if (snap.empty) return;
-            setFirearms(snap.docs.map((s) => normalizeFirearm(s.id, s.data() as Record<string, unknown>)));
+            setFirearms(snap.docs.map((s) => normalizeFirearm(s.id, s.data() as AnyDoc)));
             setLive(true);
           },
           () => undefined,
@@ -150,7 +154,7 @@ export function useFirearm(id: string) {
         unsub = fs.onSnapshot(
           fs.doc(db, "firearms", id),
           (snap) => {
-            if (snap.exists()) setFirearm(normalizeFirearm(snap.id, snap.data() as Record<string, unknown>));
+            if (snap.exists()) setFirearm(normalizeFirearm(snap.id, snap.data() as AnyDoc));
             else setFirearm((prev) => prev ?? null);
             setLoading(false);
           },
