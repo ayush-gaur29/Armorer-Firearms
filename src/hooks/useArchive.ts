@@ -169,9 +169,9 @@ export function useFirearm(id: string) {
 export interface InquiryInput {
   name: string;
   email: string;
-  phone?: string;
-  firearmInterest?: string;
-  firearmId?: string;
+  phone?: string | undefined;
+  firearmInterest?: string | undefined;
+  firearmId?: string | undefined;
   message: string;
 }
 

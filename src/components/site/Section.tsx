@@ -9,9 +9,9 @@ export function SectionHeading({
 }: {
   eyebrow: string;
   title: string;
-  text?: string;
+  text?: string | undefined;
   align?: "left" | "center";
-  className?: string;
+  className?: string | undefined;
 }) {
   return (
     <div className={cn("max-w-2xl", align === "center" && "mx-auto text-center", className)}>
@@ -22,7 +22,7 @@ export function SectionHeading({
   );
 }
 
-export function PageIntro({ eyebrow, title, text }: { eyebrow: string; title: string; text?: string }) {
+export function PageIntro({ eyebrow, title, text }: { eyebrow: string; title: string; text?: string | undefined }) {
   return (
     <section className="relative border-b border-brass-border pt-36 pb-16 sm:pt-44 sm:pb-20">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">

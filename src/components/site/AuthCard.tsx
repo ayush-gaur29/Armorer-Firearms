@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { BrandMark } from "./BrandMark";
 
-export function AuthCard({ eyebrow, title, children, footer }: { eyebrow: string; title: string; children: ReactNode; footer?: ReactNode }) {
+export function AuthCard({ eyebrow, title, children, footer }: { eyebrow: string; title: string; children: ReactNode; footer?: ReactNode | undefined }) {
   return (
     <section className="grain relative flex min-h-[100svh] items-center justify-center px-5 pt-28 pb-16">
       <div className="relative w-full max-w-md border border-brass-border bg-obsidian-2 p-8 shadow-vault sm:p-10">
@@ -25,7 +25,7 @@ export function AuthField({ label, ...props }: { label: string } & React.InputHT
   );
 }
 
-export function AuthButton({ children, busy }: { children: ReactNode; busy?: boolean }) {
+export function AuthButton({ children, busy }: { children: ReactNode; busy?: boolean | undefined }) {
   return (
     <button type="submit" disabled={busy} className="w-full bg-brass py-3.5 text-[0.72rem] tracking-[0.24em] uppercase text-obsidian transition-colors hover:bg-brass-light disabled:opacity-60">
       {busy ? "Please wait…" : children}

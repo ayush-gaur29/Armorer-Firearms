@@ -8,7 +8,7 @@ export function ArchiveImage({
   className,
   eager,
 }: {
-  src?: string;
+  src?: string | undefined;
   alt: string;
   className?: string;
   eager?: boolean;
@@ -29,7 +29,7 @@ export function ArchiveImage({
   );
 }
 
-export function StatusChip({ status }: { status?: string }) {
+export function StatusChip({ status }: { status?: string | undefined }) {
   if (!status) return null;
   const sold = /sold/i.test(status);
   const hold = /hold|reserved/i.test(status);
@@ -89,7 +89,7 @@ export function FirearmCard({ firearm }: { firearm: Firearm }) {
   );
 }
 
-export function Chip({ children, accent }: { children: React.ReactNode; accent?: boolean }) {
+export function Chip({ children, accent }: { children: React.ReactNode; accent?: boolean | undefined }) {
   return (
     <span
       className={cn(

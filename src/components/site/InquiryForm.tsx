@@ -20,9 +20,9 @@ export function InquiryForm({
   compact,
   onDone,
 }: {
-  firearmName?: string;
-  firearmId?: string;
-  compact?: boolean;
+  firearmName?: string | undefined;
+  firearmId?: string | undefined;
+  compact?: boolean | undefined;
   onDone?: () => void;
 }) {
   const [values, setValues] = useState({
@@ -119,9 +119,9 @@ function Field({
   className,
 }: {
   label: string;
-  error?: string;
+  error?: string | undefined;
   children: React.ReactNode;
-  className?: string;
+  className?: string | undefined;
 }) {
   return (
     <label className={cn("block", className)}>
