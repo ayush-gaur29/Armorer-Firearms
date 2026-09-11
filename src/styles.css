@@ -64,41 +64,42 @@
   --color-parchment: var(--parchment);
   --color-parchment-dim: var(--parchment-dim);
 
-  --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
   --radius: 0.125rem;
 
-  /* Obsidian & Brass */
-  --obsidian: oklch(0.155 0.004 250);          /* #0C0D0E */
-  --obsidian-2: oklch(0.18 0.004 250);          /* #121314 */
-  --obsidian-3: oklch(0.195 0.005 235);         /* #141618 */
-  --brass: oklch(0.74 0.09 85);                 /* #C5A869 */
-  --brass-light: oklch(0.84 0.08 88);           /* #DFCA8D */
-  --brass-dark: oklch(0.6 0.09 82);             /* #9D8147 */
-  --brass-border: oklch(0.27 0.02 85);          /* #2E2B24 */
-  --brass-border-strong: oklch(0.33 0.025 85);  /* #3E382D */
-  --ivory: oklch(0.975 0.006 90);               /* #F8F6F0 */
-  --parchment: oklch(0.91 0.01 90);             /* #E5E1D8 */
-  --parchment-dim: oklch(0.7 0.012 85);         /* #A39E93 */
+  /* Obsidian & Brass — Elevated Warm Charcoal Palette */
+  --obsidian: #101214;                 /* Primary background */
+  --obsidian-2: #14171A;               /* Secondary section */
+  --obsidian-3: #191C1F;               /* Card surface */
+  --elevated: #1D2023;                 /* Elevated surface */
+  --brass: #C9AE6E;                    /* Muted luxury brass accent */
+  --brass-light: #DFC688;              /* Highlight brass */
+  --brass-dark: #9D8147;               /* Deep brass */
+  --brass-border: #2D3238;             /* Clean subtle border */
+  --brass-border-strong: #3D434A;      /* Elevated border */
+  --ivory: #F5F3ED;                    /* Primary text — warm ivory / near-white */
+  --parchment: #D6D2CA;                /* Body text — light warm gray */
+  --parchment-dim: #B2ADA3;            /* Secondary text / metadata — medium warm gray */
 
   --background: var(--obsidian);
   --foreground: var(--parchment);
-  --card: var(--obsidian-2);
+  --card: var(--obsidian-3);
   --card-foreground: var(--parchment);
-  --popover: var(--obsidian-3);
+  --popover: var(--elevated);
   --popover-foreground: var(--parchment);
   --primary: var(--brass);
   --primary-foreground: var(--obsidian);
-  --secondary: var(--obsidian-3);
+  --secondary: var(--obsidian-2);
   --secondary-foreground: var(--ivory);
-  --muted: var(--obsidian-3);
+  --muted: var(--obsidian-2);
   --muted-foreground: var(--parchment-dim);
   --accent: var(--brass-dark);
   --accent-foreground: var(--ivory);
-  --destructive: oklch(0.55 0.18 25);
+  --destructive: #E05252;
   --destructive-foreground: var(--ivory);
   --border: var(--brass-border);
   --input: var(--brass-border-strong);
@@ -117,7 +118,7 @@
   --sidebar-border: var(--brass-border);
   --sidebar-ring: var(--brass);
 
-  --shadow-vault: 0 30px 80px -30px oklch(0 0 0 / 0.8);
+  --shadow-vault: 0 30px 80px -30px rgba(0, 0, 0, 0.7);
   --gradient-brass: linear-gradient(135deg, var(--brass-light), var(--brass) 45%, var(--brass-dark));
 }
 
@@ -143,9 +144,14 @@
     overflow-x: hidden;
   }
 
-  h1, h2, h3, h4 {
+  h1, h2 {
     font-family: var(--font-serif);
     font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  h3, h4, h5, h6 {
+    font-family: var(--font-sans);
     letter-spacing: -0.01em;
   }
 
@@ -161,6 +167,111 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+}
+
+/* Scroll Reveal & Storytelling Animations */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered card groups */
+[data-reveal-group] > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+[data-reveal-group].is-revealed > *:nth-child(1) { transition-delay: 40ms; }
+[data-reveal-group].is-revealed > *:nth-child(2) { transition-delay: 140ms; }
+[data-reveal-group].is-revealed > *:nth-child(3) { transition-delay: 240ms; }
+[data-reveal-group].is-revealed > *:nth-child(4) { transition-delay: 340ms; }
+[data-reveal-group].is-revealed > *:nth-child(5) { transition-delay: 440ms; }
+[data-reveal-group].is-revealed > *:nth-child(6) { transition-delay: 540ms; }
+[data-reveal-group].is-revealed > *:nth-child(7) { transition-delay: 640ms; }
+[data-reveal-group].is-revealed > *:nth-child(8) { transition-delay: 740ms; }
+
+[data-reveal-group].is-revealed > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Editorial Image Reveal */
+[data-reveal-image] {
+  opacity: 0;
+  transform: scale(1.02);
+  transition: opacity 850ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 850ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+[data-reveal-image].is-revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Hero Entrance Sequence */
+@keyframes heroEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-enter-eyebrow {
+  animation: heroEntrance 700ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both;
+}
+
+.hero-enter-heading {
+  animation: heroEntrance 800ms cubic-bezier(0.16, 1, 0.3, 1) 220ms both;
+}
+
+.hero-enter-description {
+  animation: heroEntrance 750ms cubic-bezier(0.16, 1, 0.3, 1) 360ms both;
+}
+
+.hero-enter-cta {
+  animation: heroEntrance 750ms cubic-bezier(0.16, 1, 0.3, 1) 480ms both;
+}
+
+.hero-enter-stats {
+  animation: heroEntrance 850ms cubic-bezier(0.16, 1, 0.3, 1) 620ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-video {
+    display: none !important;
+  }
+  .hero-poster {
+    opacity: 1 !important;
+  }
+  [data-reveal],
+  [data-reveal-group] > *,
+  [data-reveal-image],
+  .hero-enter-eyebrow,
+  .hero-enter-heading,
+  .hero-enter-description,
+  .hero-enter-cta,
+  .hero-enter-stats {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
   }
 }
 

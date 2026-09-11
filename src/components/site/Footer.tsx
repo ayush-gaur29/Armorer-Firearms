@@ -6,7 +6,7 @@ export function Footer() {
   const contact = useContactContent();
   return (
     <footer className="border-t border-brass-border bg-obsidian-2">
-      <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-8 md:grid-cols-[1.6fr_1fr_1.2fr]" data-reveal>
         <div className="min-w-0">
           <BrandMark />
           <p className="mt-6 max-w-sm text-sm leading-relaxed text-parchment-dim">
@@ -19,19 +19,9 @@ export function Footer() {
         <div>
           <p className="eyebrow mb-5">Archive</p>
           <ul className="space-y-3 text-sm text-parchment-dim">
-            <li><Link to="/collection" className="hover:text-brass">Full Collection</Link></li>
-            <li><Link to="/" hash="highlights" className="hover:text-brass">Archive Highlights</Link></li>
-            <li><Link to="/about" className="hover:text-brass">Heritage &amp; Atelier</Link></li>
-            <li><Link to="/contact" className="hover:text-brass">Private Inquiry</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="eyebrow mb-5">Collectors</p>
-          <ul className="space-y-3 text-sm text-parchment-dim">
-            <li><Link to="/login" className="hover:text-brass">Collector Login</Link></li>
-            <li><Link to="/signup" className="hover:text-brass">Request an Account</Link></li>
-            <li><Link to="/profile" className="hover:text-brass">My Profile</Link></li>
+            <li><Link to="/collection" className="hover:text-brass transition-colors">Full Collection</Link></li>
+            <li><Link to="/about" className="hover:text-brass transition-colors">Heritage &amp; Atelier</Link></li>
+            <li><Link to="/contact" className="hover:text-brass transition-colors">Contact</Link></li>
           </ul>
         </div>
 
@@ -40,8 +30,8 @@ export function Footer() {
           <ul className="space-y-3 text-sm text-parchment-dim">
             <li>{contact.address}</li>
             <li>{contact.city}</li>
-            <li className="break-words"><a href={`tel:${contact.phone}`} className="hover:text-brass">{contact.phone}</a></li>
-            <li className="break-words"><a href={`mailto:${contact.email}`} className="hover:text-brass">{contact.email}</a></li>
+            <li className="break-words"><a href={`tel:${contact.phone}`} className="hover:text-brass transition-colors">{contact.phone}</a></li>
+            <li className="break-words"><a href={`mailto:${contact.email}`} className="hover:text-brass transition-colors">{contact.email}</a></li>
           </ul>
         </div>
       </div>

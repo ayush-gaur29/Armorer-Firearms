@@ -1,13 +1,12 @@
-import { Link, useNavigate } from "@tanstack/react-router";
-import { Menu, X, UserRound } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
 import { BrandMark } from "./BrandMark";
 import { cn } from "@/lib/utils";
 
 const NAV = [
+  { to: "/", label: "Home" },
   { to: "/collection", label: "Collection" },
-  { to: "/", hash: "highlights", label: "Archive Highlights" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ] as const;
@@ -15,8 +14,6 @@ const NAV = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const { user, ready } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -32,11 +29,6 @@ export function Header() {
     };
   }, [open]);
 
-  const goToHighlights = () => {
-    setOpen(false);
-    navigate({ to: "/", hash: "highlights" });
-  };
-
   return (
     <header
       className={cn(
@@ -44,58 +36,27 @@ export function Header() {
         scrolled ? "bg-obsidian/90 backdrop-blur-md border-b border-brass-border" : "bg-transparent border-b border-transparent",
       )}
     >
-      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
-        <Link to="/" className="flex min-w-0 items-center" onClick={() => setOpen(false)}>
+      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
+        <Link to="/" className="flex min-w-0 items-center" onClick={() => setOpen(false)} aria-label="Armorer Firearms Home">
           <BrandMark />
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
-          {NAV.map((item) =>
-            "hash" in item ? (
-              <button
-                key={item.label}
-                onClick={goToHighlights}
-                className="text-[0.72rem] tracking-[0.22em] uppercase text-parchment-dim transition-colors hover:text-brass"
-              >
-                {item.label}
-              </button>
-            ) : (
-              <Link
-                key={item.label}
-                to={item.to}
-                className="text-[0.72rem] tracking-[0.22em] uppercase text-parchment-dim transition-colors hover:text-brass"
-                activeProps={{ className: "text-brass" }}
-              >
-                {item.label}
-              </Link>
-            ),
-          )}
+          {NAV.map((item) => (
+            <Link
+              key={item.label}
+              to={item.to}
+              activeOptions={{ exact: item.to === "/" }}
+              className="text-[0.72rem] tracking-[0.22em] uppercase font-medium text-[#F1EDE4] transition-colors hover:text-brass [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]"
+              activeProps={{ className: "!text-brass font-semibold" }}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          {ready && user ? (
-            <Link
-              to="/profile"
-              className="flex items-center gap-2 text-[0.72rem] tracking-[0.2em] uppercase text-parchment-dim hover:text-brass"
-            >
-              <UserRound className="size-4" aria-hidden />
-              {user.displayName?.split(" ")[0] ?? "Profile"}
-            </Link>
-          ) : (
-            <Link to="/login" className="text-[0.72rem] tracking-[0.2em] uppercase text-parchment-dim hover:text-brass">
-              Collector Login
-            </Link>
-          )}
-          <Link
-            to="/contact"
-            className="border border-brass px-5 py-2.5 text-[0.72rem] tracking-[0.22em] uppercase text-brass transition-colors hover:bg-brass hover:text-obsidian"
-          >
-            Private Inquiry
-          </Link>
-        </div>
-
         <button
-          className="grid size-10 shrink-0 place-items-center text-parchment lg:hidden"
+          className="grid size-10 shrink-0 place-items-center text-[#F1EDE4] lg:hidden cursor-pointer"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((o) => !o)}
@@ -120,40 +81,27 @@ export function Header() {
         )}
         aria-label="Mobile navigation"
       >
-        <span className="eyebrow mb-6">Navigate</span>
-        <nav className="flex flex-col gap-5">
-          {NAV.map((item) =>
-            "hash" in item ? (
-              <button key={item.label} onClick={goToHighlights} className="text-left font-serif text-2xl text-parchment hover:text-brass">
-                {item.label}
-              </button>
-            ) : (
-              <Link key={item.label} to={item.to} onClick={() => setOpen(false)} className="font-serif text-2xl text-parchment hover:text-brass">
-                {item.label}
-              </Link>
-            ),
-          )}
+        <span className="eyebrow mb-8">Navigation</span>
+        <nav className="flex flex-col gap-6">
+          {NAV.map((item) => (
+            <Link
+              key={item.label}
+              to={item.to}
+              activeOptions={{ exact: item.to === "/" }}
+              activeProps={{ className: "!text-brass font-semibold" }}
+              onClick={() => setOpen(false)}
+              className="font-serif text-2xl font-medium text-[#F1EDE4] hover:text-brass transition-colors"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
         <div className="hairline my-8" />
-        <div className="flex flex-col gap-4">
-          {ready && user ? (
-            <Link to="/profile" onClick={() => setOpen(false)} className="text-[0.72rem] tracking-[0.2em] uppercase text-parchment-dim hover:text-brass">
-              My Profile
-            </Link>
-          ) : (
-            <Link to="/login" onClick={() => setOpen(false)} className="text-[0.72rem] tracking-[0.2em] uppercase text-parchment-dim hover:text-brass">
-              Collector Login
-            </Link>
-          )}
-          <Link
-            to="/contact"
-            onClick={() => setOpen(false)}
-            className="border border-brass px-5 py-3 text-center text-[0.72rem] tracking-[0.22em] uppercase text-brass hover:bg-brass hover:text-obsidian"
-          >
-            Private Inquiry
-          </Link>
-        </div>
-        <p className="mt-auto text-xs text-parchment-dim">Bigfork, Montana · Est. 1998</p>
+        <p className="text-xs tracking-wider text-parchment-dim leading-relaxed">
+          Armorer Firearms Atelier<br />
+          Bigfork, Montana · Est. 1998
+        </p>
+        <p className="mt-auto text-xs text-parchment-dim/70">A Private Archive of Historic Arms</p>
       </aside>
     </header>
   );

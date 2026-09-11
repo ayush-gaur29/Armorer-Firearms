@@ -1,23 +1,39 @@
 import { cn } from "@/lib/utils";
+import logoImg from "@/assets/logo.png";
 
-export function BrandMark({ className, large }: { className?: string; large?: boolean }) {
+export function BrandMark({
+  className,
+  large,
+  hideText,
+}: {
+  className?: string;
+  large?: boolean;
+  hideText?: boolean;
+}) {
   return (
     <span className={cn("flex items-center gap-3", className)}>
-      <span
-        aria-hidden
+      <img
+        src={logoImg}
+        alt="Armorer Firearms"
+        width={large ? 48 : 36}
+        height={large ? 48 : 36}
         className={cn(
-          "grid shrink-0 place-items-center border border-brass font-serif text-brass",
-          large ? "size-14 text-2xl" : "size-9 text-base",
+          "shrink-0 object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] transition-transform duration-300 hover:scale-105",
+          large ? "h-11 sm:h-12 w-auto" : "h-8.5 sm:h-9 w-auto",
         )}
-      >
-        A
-      </span>
-      <span className="flex min-w-0 flex-col leading-none">
-        <span className={cn("font-serif text-ivory tracking-wide truncate", large ? "text-3xl" : "text-lg")}>
-          Armorer Firearms
+      />
+      {!hideText && (
+        <span className="flex min-w-0 items-center">
+          <span
+            className={cn(
+              "font-serif text-ivory tracking-wide truncate",
+              large ? "text-2xl sm:text-3xl" : "text-base sm:text-lg",
+            )}
+          >
+            Armorer Firearms
+          </span>
         </span>
-        <span className="mt-1 text-[0.58rem] tracking-[0.32em] uppercase text-brass-dark">Private Archive · MT</span>
-      </span>
+      )}
     </span>
   );
 }

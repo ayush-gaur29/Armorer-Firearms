@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getDb } from "@/lib/firebase";
 import {
+  accessionNo,
   FALLBACK_ABOUT,
   FALLBACK_CONTACT,
   FALLBACK_FIREARMS,
@@ -50,28 +51,47 @@ interface AnyDoc {
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 function normalizeFirearm(id: string, d: AnyDoc): Firearm {
+  const localMatch = FALLBACK_FIREARMS.find(
+    (f) =>
+      f.id === id ||
+      accessionNo(f.id) === accessionNo(id) ||
+      f.name.toLowerCase().includes(String(d.name ?? "").toLowerCase()) ||
+      String(d.name ?? "").toLowerCase().includes(f.name.toLowerCase()),
+  );
+
+  // Authoritative images: The newly configured museum photography from localMatch
+  // takes strict precedence over stale remote Firestore image URLs.
+  // This completely eliminates the 1-second image blink/swap when Firestore data resolves.
   const rawImages = d.images;
-  const images = Array.isArray(rawImages)
+  const remoteImages = Array.isArray(rawImages)
     ? rawImages.filter((x): x is string => typeof x === "string" && x.length > 0)
     : typeof d.image === "string"
       ? [d.image]
       : [];
+
+  const authoritativeImages =
+    localMatch?.images && localMatch.images.length > 0
+      ? localMatch.images
+      : remoteImages.length > 0
+        ? remoteImages
+        : [PLACEHOLDER_IMAGE];
+
   return {
     id,
-    name: String(d.name ?? "Untitled Piece"),
-    maker: String(d.maker ?? ""),
-    model: String(d.model ?? ""),
-    caliber: String(d.caliber ?? ""),
-    year: (d.year as number | string) ?? "",
-    price: d.price as number | string | undefined,
-    description: String(d.description ?? ""),
-    history: d.history ? String(d.history) : undefined,
-    condition: String(d.condition ?? ""),
-    category: String(d.category ?? "Uncategorized"),
-    status: d.status ? String(d.status) : undefined,
-    images: images.length ? images : [PLACEHOLDER_IMAGE],
-    featured: Boolean(d.featured),
-    serial: d.serial ? String(d.serial) : undefined,
+    name: String(d.name ?? localMatch?.name ?? "Untitled Piece"),
+    maker: String(d.maker ?? localMatch?.maker ?? ""),
+    model: String(d.model ?? localMatch?.model ?? ""),
+    caliber: String(d.caliber ?? localMatch?.caliber ?? ""),
+    year: (d.year as number | string) ?? localMatch?.year ?? "",
+    price: (d.price as number | string | undefined) ?? localMatch?.price,
+    description: String(d.description ?? localMatch?.description ?? ""),
+    history: d.history ? String(d.history) : localMatch?.history,
+    condition: String(d.condition ?? localMatch?.condition ?? ""),
+    category: String(d.category ?? localMatch?.category ?? "Uncategorized"),
+    status: d.status ? String(d.status) : localMatch?.status,
+    images: authoritativeImages,
+    featured: Boolean(d.featured ?? localMatch?.featured),
+    serial: d.serial ? String(d.serial) : localMatch?.serial,
   };
 }
 

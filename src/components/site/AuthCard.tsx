@@ -1,13 +1,33 @@
 import type { ReactNode } from "react";
 import { BrandMark } from "./BrandMark";
+import { BackButton } from "./BackButton";
 
-export function AuthCard({ eyebrow, title, children, footer }: { eyebrow: string; title: string; children: ReactNode; footer?: ReactNode | undefined }) {
+export function AuthCard({
+  eyebrow,
+  title,
+  children,
+  footer,
+  backTo = "/",
+  backLabel = "Back",
+  showBack = true,
+}: {
+  eyebrow: string;
+  title: string;
+  children: ReactNode;
+  footer?: ReactNode | undefined;
+  backTo?: string;
+  backLabel?: string;
+  showBack?: boolean;
+}) {
   return (
     <section className="grain relative flex min-h-[100svh] items-center justify-center px-5 pt-28 pb-16">
       <div className="relative w-full max-w-md border border-brass-border bg-obsidian-2 p-8 shadow-vault sm:p-10">
         <div className="absolute -top-px left-8 right-8 h-px bg-brass" />
-        <BrandMark />
-        <p className="eyebrow mt-10">{eyebrow}</p>
+        <div className="flex items-center justify-between gap-4">
+          <BrandMark />
+          {showBack && <BackButton fallbackTo={backTo} label={backLabel} />}
+        </div>
+        <p className="eyebrow mt-8">{eyebrow}</p>
         <h1 className="mt-3 font-serif text-3xl text-ivory">{title}</h1>
         <div className="mt-8">{children}</div>
         {footer && <div className="mt-8 border-t border-brass-border pt-6 text-sm text-parchment-dim">{footer}</div>}
