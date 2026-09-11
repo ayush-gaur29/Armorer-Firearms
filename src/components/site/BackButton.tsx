@@ -31,7 +31,7 @@ export function BackButton({
       onClick={handleBack}
       aria-label={label}
       className={cn(
-        "group inline-flex items-center gap-2.5 px-3 py-2 text-[0.68rem] tracking-[0.22em] uppercase text-parchment-dim transition-all duration-300 hover:text-brass focus-visible:outline-2 focus-visible:outline-brass focus-visible:outline-offset-2 border border-brass-border/40 hover:border-brass/50 bg-obsidian-2/60 hover:bg-obsidian-2 backdrop-blur-sm cursor-pointer",
+        "group inline-flex items-center gap-2 px-3.5 py-2 min-h-[38px] text-xs font-mono tracking-[0.18em] uppercase text-parchment-dim transition-all duration-300 hover:text-brass focus-visible:outline-2 focus-visible:outline-brass focus-visible:outline-offset-2 border border-brass-border/60 hover:border-brass/50 bg-obsidian-2/80 hover:bg-obsidian-2 backdrop-blur-sm cursor-pointer active:scale-[0.98]",
         className,
       )}
     >

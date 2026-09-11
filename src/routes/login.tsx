@@ -6,9 +6,9 @@ import { AuthButton, AuthCard, AuthField } from "@/components/site/AuthCard";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Collector Login — Armorer Firearms" },
+      { title: "Armorer Firearms" },
       { name: "description", content: "Sign in to the Armorer Firearms collector portal to manage your profile and inquiries." },
-      { property: "og:title", content: "Collector Login — Armorer Firearms" },
+      { property: "og:title", content: "Armorer Firearms" },
       { property: "og:description", content: "Private collector portal access." },
       { name: "robots", content: "noindex" },
     ],

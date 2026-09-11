@@ -37,12 +37,12 @@ export function StatusChip({ status }: { status?: string | undefined }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center border px-2.5 py-0.5 font-mono text-[0.58rem] font-semibold tracking-[0.22em] uppercase backdrop-blur-md",
+        "inline-flex items-center border px-2.5 py-1 font-mono text-[0.68rem] sm:text-xs font-semibold tracking-[0.16em] uppercase backdrop-blur-md",
         sold
-          ? "border-parchment-dim/30 bg-obsidian/85 text-parchment-dim"
+          ? "border-parchment-dim/30 bg-obsidian/90 text-parchment-dim"
           : hold
-            ? "border-[#C98A4B]/60 bg-obsidian/85 text-[#E0A266]"
-            : "border-brass/70 bg-obsidian/85 text-brass",
+            ? "border-[#C98A4B]/70 bg-obsidian/90 text-[#E0A266]"
+            : "border-brass/80 bg-obsidian/90 text-brass",
       )}
     >
       {status}
@@ -54,10 +54,10 @@ export function Chip({ children, accent }: { children: React.ReactNode; accent?:
   return (
     <span
       className={cn(
-        "inline-flex items-center border px-2 py-0.5 font-mono text-[0.6rem] font-medium tracking-[0.14em] uppercase",
+        "inline-flex items-center border px-2.5 py-1 font-mono text-[0.68rem] sm:text-xs font-medium tracking-[0.12em] uppercase",
         accent
           ? "border-brass-dark/70 text-brass-light bg-brass/10"
-          : "border-brass-border bg-obsidian-2/70 text-parchment-dim",
+          : "border-brass-border bg-obsidian-2/80 text-parchment-dim",
       )}
     >
       {children}
@@ -70,21 +70,21 @@ export function FirearmCard({ firearm }: { firearm: Firearm }) {
     <Link
       to="/collection/$id"
       params={{ id: firearm.id }}
-      className="group flex h-full flex-col border border-brass-border/70 bg-[#16181B] transition-all duration-500 ease-out hover:-translate-y-1 hover:border-brass/50 hover:bg-[#1A1D21] hover:shadow-vault focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass"
+      className="group flex h-full flex-col border border-brass-border/70 bg-[#16181B] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brass/50 hover:bg-[#1A1D21] hover:shadow-vault focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass"
     >
       {/* Museum catalog plate image frame */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-obsidian-3">
         <ArchiveImage
           src={firearm.images[0]}
           alt={firearm.name}
-          className="group-hover:scale-[1.035] group-hover:brightness-[1.04]"
+          className="group-hover:scale-[1.03] group-hover:brightness-[1.04]"
         />
         {/* Subtle cinematic gradient overlays */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-obsidian/80 via-transparent to-transparent" />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-obsidian/60 to-transparent" />
 
         {/* Accession tag */}
-        <span className="absolute top-3 left-3 border border-brass-border/50 bg-obsidian/90 px-2 py-0.5 font-mono text-[0.58rem] tracking-[0.22em] text-brass backdrop-blur-md">
+        <span className="absolute top-3 left-3 border border-brass-border/60 bg-obsidian/95 px-2.5 py-1 font-mono text-[0.65rem] sm:text-xs tracking-[0.16em] text-brass backdrop-blur-md">
           ACCESSION NO. {accessionNo(firearm.id)}
         </span>
 
@@ -95,19 +95,19 @@ export function FirearmCard({ firearm }: { firearm: Firearm }) {
       </div>
 
       {/* Catalog Entry Dossier */}
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
+      <div className="flex flex-1 flex-col p-4 sm:p-5 lg:p-6">
         {/* Eyebrow: Maker & Category */}
         <div className="flex items-center justify-between gap-2">
-          <span className="text-[0.62rem] font-medium tracking-[0.24em] uppercase text-brass/90">
+          <span className="text-xs font-medium tracking-[0.2em] uppercase text-brass">
             {firearm.maker || "Armorer Archive"}
           </span>
-          <span className="text-[0.6rem] font-mono tracking-[0.16em] uppercase text-parchment-dim/80">
+          <span className="text-xs font-mono tracking-[0.14em] uppercase text-parchment-dim">
             {firearm.category}
           </span>
         </div>
 
         {/* Title */}
-        <h3 className="mt-2.5 font-serif text-xl sm:text-[1.32rem] leading-snug text-ivory tracking-tight transition-colors duration-300 group-hover:text-brass-light">
+        <h3 className="mt-2.5 font-serif text-lg sm:text-xl leading-snug text-ivory tracking-tight transition-colors duration-300 group-hover:text-brass-light">
           {firearm.name}
         </h3>
 
@@ -120,17 +120,17 @@ export function FirearmCard({ firearm }: { firearm: Firearm }) {
 
         {/* Archival description snippet */}
         {firearm.description && (
-          <p className="mt-3.5 text-xs leading-relaxed text-parchment-dim/80 line-clamp-2">
+          <p className="mt-3.5 text-xs sm:text-sm leading-relaxed text-parchment-dim/80 line-clamp-2">
             {firearm.description}
           </p>
         )}
 
         {/* Footer: Price & Examine Action */}
         <div className="mt-auto border-t border-brass-border/40 pt-4 mt-5 flex items-center justify-between gap-3">
-          <span className="font-sans font-semibold text-lg text-brass tracking-tight">
+          <span className="font-sans font-semibold text-lg sm:text-xl text-brass tracking-tight">
             {formatPrice(firearm.price)}
           </span>
-          <span className="inline-flex items-center gap-1.5 text-[0.65rem] font-medium tracking-[0.2em] uppercase text-parchment-dim transition-colors duration-300 group-hover:text-brass group-hover:translate-x-0.5">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-[0.16em] uppercase text-parchment-dim transition-colors duration-300 group-hover:text-brass group-hover:translate-x-0.5">
             Examine Piece <ArrowRight className="size-3.5" />
           </span>
         </div>

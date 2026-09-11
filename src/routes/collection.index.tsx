@@ -18,13 +18,13 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/collection/")({
   head: () => ({
     meta: [
-      { title: "The Collection — Armorer Firearms Archive Catalog" },
+      { title: "Armorer Firearms" },
       {
         name: "description",
         content:
           "Browse the complete Armorer Firearms archive: historical revolvers, lever-action rifles, sporting shotguns, and rare martial arms, researched and curated in Bigfork, Montana.",
       },
-      { property: "og:title", content: "The Collection — Armorer Firearms" },
+      { property: "og:title", content: "Armorer Firearms" },
       {
         property: "og:description",
         content:
@@ -136,12 +136,12 @@ function CollectionPage() {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(16,18,20,0.5)_40%,#101214_100%)]" />
 
       {/* HERO / EDITORIAL HEADER */}
-      <section className="relative pt-28 pb-12 sm:pt-36 sm:pb-16 border-b border-brass-border/60">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      <section className="relative pt-24 pb-10 sm:pt-32 sm:pb-14 lg:pt-36 lg:pb-16 border-b border-brass-border/60">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Back button & Eyebrow */}
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <BackButton fallbackTo="/" label="Back to Atelier" />
-            <span className="font-mono text-[0.62rem] tracking-[0.26em] uppercase text-parchment-dim/70">
+            <span className="font-mono text-xs tracking-[0.2em] uppercase text-parchment-dim/80">
               ACCESSION REGISTER · BIGFORK, MT
             </span>
           </div>
@@ -151,16 +151,16 @@ function CollectionPage() {
             <div className="lg:col-span-7" data-reveal>
               <div className="flex items-center gap-3">
                 <span className="h-px w-6 bg-brass" />
-                <p className="font-mono text-[0.65rem] font-medium tracking-[0.28em] uppercase text-brass">
+                <p className="font-mono text-xs font-medium tracking-[0.24em] uppercase text-brass">
                   THE ARMORER ARCHIVE
                 </p>
               </div>
 
-              <h1 className="mt-4 font-serif text-[clamp(2.6rem,5.2vw,4.85rem)] font-normal leading-[1.04] tracking-tight text-ivory drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
+              <h1 className="mt-4 font-serif text-[clamp(2.2rem,5.5vw,4.85rem)] font-normal leading-[1.06] tracking-tight text-ivory drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
                 The Collection
               </h1>
 
-              <p className="mt-5 max-w-xl font-sans text-base leading-relaxed text-[#E8E3D9] [text-shadow:0_1px_6px_rgba(0,0,0,0.5)] sm:text-lg">
+              <p className="mt-4 max-w-xl font-sans text-base leading-relaxed text-[#E8E3D9] [text-shadow:0_1px_6px_rgba(0,0,0,0.5)] sm:text-lg">
                 Every piece is examined, documented, and conserved in our Montana atelier before
                 it enters the permanent public register. Filter by maker, caliber, or condition, or
                 explore the catalog directly.
@@ -180,9 +180,9 @@ function CollectionPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-obsidian/60 via-transparent to-transparent pointer-events-none" />
                   <div className="absolute inset-0 ring-1 ring-inset ring-brass/10 pointer-events-none" />
                 </div>
-                <div className="mt-2.5 flex items-center justify-between px-2 py-0.5 font-mono text-[0.58rem] tracking-[0.2em] text-brass-dark uppercase">
+                <div className="mt-2.5 flex items-center justify-between px-2 py-0.5 font-mono text-xs tracking-[0.16em] text-brass-dark uppercase">
                   <span>THE ARMORER ARCHIVE</span>
-                  <span className="text-parchment-dim/60">PRIVATE COLLECTION</span>
+                  <span className="text-parchment-dim/70">PRIVATE COLLECTION</span>
                 </div>
               </div>
             </div>
@@ -191,29 +191,29 @@ function CollectionPage() {
           {/* Archival Statistics Strip */}
           <div
             data-reveal
-            className="mt-12 grid grid-cols-2 gap-4 border-t border-brass-border/60 pt-8 sm:grid-cols-4 sm:gap-8"
+            className="mt-10 grid grid-cols-2 gap-4 border-t border-brass-border/60 pt-6 sm:mt-12 sm:grid-cols-4 sm:gap-6 sm:pt-8"
           >
             <div>
-              <p className="font-serif text-3xl text-brass-light sm:text-4xl">{stats.piecesCount}</p>
-              <p className="mt-1 font-mono text-[0.6rem] font-medium tracking-[0.22em] uppercase text-parchment-dim">
+              <p className="font-serif text-2xl sm:text-3xl lg:text-4xl text-brass-light">{stats.piecesCount}</p>
+              <p className="mt-1 font-mono text-xs font-medium tracking-[0.16em] uppercase text-parchment-dim">
                 Pieces In Archive
               </p>
             </div>
             <div>
-              <p className="font-serif text-3xl text-brass-light sm:text-4xl">{stats.categoriesCount}</p>
-              <p className="mt-1 font-mono text-[0.6rem] font-medium tracking-[0.22em] uppercase text-parchment-dim">
+              <p className="font-serif text-2xl sm:text-3xl lg:text-4xl text-brass-light">{stats.categoriesCount}</p>
+              <p className="mt-1 font-mono text-xs font-medium tracking-[0.16em] uppercase text-parchment-dim">
                 Curated Categories
               </p>
             </div>
             <div>
-              <p className="font-serif text-3xl text-brass-light sm:text-4xl">{stats.yearSpan}</p>
-              <p className="mt-1 font-mono text-[0.6rem] font-medium tracking-[0.22em] uppercase text-parchment-dim">
+              <p className="font-serif text-2xl sm:text-3xl lg:text-4xl text-brass-light">{stats.yearSpan}</p>
+              <p className="mt-1 font-mono text-xs font-medium tracking-[0.16em] uppercase text-parchment-dim">
                 Historical Span
               </p>
             </div>
             <div>
-              <p className="font-serif text-3xl text-brass-light sm:text-4xl">{stats.documentedPercent}</p>
-              <p className="mt-1 font-mono text-[0.6rem] font-medium tracking-[0.22em] uppercase text-parchment-dim">
+              <p className="font-serif text-2xl sm:text-3xl lg:text-4xl text-brass-light">{stats.documentedPercent}</p>
+              <p className="mt-1 font-mono text-xs font-medium tracking-[0.16em] uppercase text-parchment-dim">
                 Provenance Documented
               </p>
             </div>
@@ -222,8 +222,8 @@ function CollectionPage() {
       </section>
 
       {/* SEARCH & FILTERS BAR (Sticky) */}
-      <section className="sticky top-18 z-30 border-b border-brass-border/80 bg-obsidian/95 backdrop-blur-md shadow-lg transition-all">
-        <div className="mx-auto max-w-7xl px-5 py-3.5 sm:px-8">
+      <section className="sticky top-16 sm:top-18 z-30 border-b border-brass-border/80 bg-obsidian/95 backdrop-blur-md shadow-lg transition-all">
+        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8">
           {/* Desktop Search & Filters */}
           <div className="hidden lg:grid lg:grid-cols-[1.8fr_repeat(4,1fr)_1.2fr] lg:gap-3">
             {/* Search */}
@@ -290,22 +290,22 @@ function CollectionPage() {
           <div className="flex flex-col gap-2.5 lg:hidden">
             {/* Search */}
             <div className="relative w-full">
-              <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-parchment-dim" />
+              <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-parchment-dim" />
               <input
                 type="text"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search archive..."
-                className="h-10 w-full rounded-none border border-brass-border bg-obsidian-2/80 pl-9 pr-9 text-xs tracking-wider text-ivory placeholder:text-parchment-dim/60 focus:border-brass focus:outline-none focus:ring-1 focus:ring-brass"
+                placeholder="Search archive by maker, model..."
+                className="h-11 w-full rounded-none border border-brass-border bg-obsidian-2/90 pl-10 pr-10 text-xs sm:text-sm tracking-wider text-ivory placeholder:text-parchment-dim/60 focus:border-brass focus:outline-none focus:ring-1 focus:ring-brass"
                 aria-label="Search the archive"
               />
               {q && (
                 <button
                   onClick={() => setQ("")}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 text-parchment-dim hover:text-ivory"
+                  className="absolute top-1/2 right-2.5 -translate-y-1/2 p-1.5 text-parchment-dim hover:text-ivory"
                   aria-label="Clear search"
                 >
-                  <X className="size-3.5" />
+                  <X className="size-4" />
                 </button>
               )}
             </div>
@@ -315,7 +315,7 @@ function CollectionPage() {
               <button
                 onClick={() => setMobileFilterOpen(true)}
                 className={cn(
-                  "flex-1 h-10 inline-flex items-center justify-center gap-2 border px-3 text-xs font-medium tracking-wider uppercase transition-colors",
+                  "flex-1 h-11 inline-flex items-center justify-center gap-2 border px-3 text-xs font-semibold tracking-wider uppercase transition-colors active:scale-[0.99]",
                   activeFiltersCount > 0
                     ? "border-brass bg-brass/15 text-brass"
                     : "border-brass-border bg-obsidian-2 text-parchment hover:border-brass-border-strong",
@@ -325,7 +325,7 @@ function CollectionPage() {
                 <SlidersHorizontal className="size-3.5" />
                 <span>Filters</span>
                 {activeFiltersCount > 0 && (
-                  <span className="grid size-4 place-items-center rounded-full bg-brass text-[0.62rem] font-bold text-obsidian">
+                  <span className="grid size-4.5 place-items-center rounded-full bg-brass text-xs font-bold text-obsidian">
                     {activeFiltersCount}
                   </span>
                 )}
@@ -336,7 +336,7 @@ function CollectionPage() {
                   value={sort}
                   onChange={(e) => setSort(e.target.value as SortKey)}
                   aria-label="Sort collection"
-                  className="h-10 w-full rounded-none border border-brass-border bg-obsidian-2 px-3 text-xs tracking-wider text-ivory focus:border-brass focus:outline-none"
+                  className="h-11 w-full rounded-none border border-brass-border bg-obsidian-2 px-3 text-xs tracking-wider text-ivory focus:border-brass focus:outline-none"
                 >
                   <option value="year-asc">Year · Oldest</option>
                   <option value="year-desc">Year · Newest</option>
@@ -351,12 +351,12 @@ function CollectionPage() {
       </section>
 
       {/* MAIN CATALOG CONTENT */}
-      <main className="py-10 sm:py-16">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      <main className="py-8 sm:py-12 lg:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Active Filter Chips & Results Count Bar */}
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-brass-border/40 pb-5">
+          <div className="mb-6 sm:mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-brass-border/40 pb-4 sm:pb-5">
             <div className="flex flex-wrap items-center gap-2">
-              <p className="font-mono text-[0.68rem] tracking-[0.22em] uppercase text-parchment-dim">
+              <p className="font-mono text-xs tracking-wider uppercase text-parchment-dim">
                 <span className="font-bold text-brass">{results.length}</span>{" "}
                 {results.length === 1 ? "Piece" : "Pieces"} in view · {firearms.length} in Archive
               </p>
@@ -376,9 +376,9 @@ function CollectionPage() {
             {isFiltered && (
               <button
                 onClick={resetAll}
-                className="inline-flex items-center gap-1.5 font-mono text-[0.68rem] tracking-[0.2em] uppercase text-brass hover:text-brass-light transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 font-mono text-xs tracking-wider uppercase text-brass hover:text-brass-light transition-colors cursor-pointer py-1"
               >
-                <RotateCcw className="size-3" /> Reset All Filters
+                <RotateCcw className="size-3" /> Reset Filters
               </button>
             )}
           </div>
@@ -397,7 +397,7 @@ function CollectionPage() {
             /* Refined Museum Empty State */
             <div
               data-reveal
-              className="mx-auto max-w-2xl border border-brass-border/80 bg-obsidian-2/70 p-10 sm:p-16 text-center backdrop-blur-sm"
+              className="mx-auto max-w-2xl border border-brass-border/80 bg-obsidian-2/70 p-8 sm:p-14 text-center backdrop-blur-sm"
             >
               <div className="mx-auto grid size-12 place-items-center rounded-full border border-brass/40 bg-obsidian text-brass">
                 <SlidersHorizontal className="size-5" />
@@ -409,10 +409,10 @@ function CollectionPage() {
                 No cataloged pieces match the currently selected criteria. Broaden your search or
                 reset filters to explore the entire archive.
               </p>
-              <div className="mt-8 flex justify-center">
+              <div className="mt-6 sm:mt-8 flex justify-center">
                 <button
                   onClick={resetAll}
-                  className="inline-flex items-center gap-2 bg-brass px-6 py-3 text-[0.7rem] font-semibold tracking-[0.2em] uppercase text-obsidian transition-colors hover:bg-brass-light cursor-pointer"
+                  className="inline-flex items-center gap-2 bg-brass px-6 py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-obsidian transition-colors hover:bg-brass-light cursor-pointer"
                 >
                   <RotateCcw className="size-3.5" /> Reset Archival Filters
                 </button>
@@ -434,22 +434,22 @@ function CollectionPage() {
 
           {/* Drawer Body */}
           <aside
-            className="relative z-10 flex h-full w-[min(22rem,90vw)] flex-col border-l border-brass-border bg-obsidian-2 px-6 py-8 shadow-2xl overflow-y-auto"
+            className="relative z-10 flex h-full w-[min(22rem,90vw)] flex-col border-l border-brass-border bg-[#131518] px-6 py-6 shadow-2xl overflow-y-auto"
             aria-label="Filters Drawer"
           >
-            <div className="flex items-center justify-between border-b border-brass-border/60 pb-5">
+            <div className="flex items-center justify-between border-b border-brass-border/60 pb-4">
               <div>
-                <p className="font-mono text-[0.6rem] font-medium tracking-[0.24em] uppercase text-brass">
+                <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-brass">
                   ARCHIVAL REGISTER
                 </p>
                 <h2 className="mt-1 font-serif text-2xl text-ivory">Filter Archive</h2>
               </div>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="grid size-9 place-items-center border border-brass-border text-parchment hover:text-ivory"
+                className="flex size-10 items-center justify-center border border-brass-border text-parchment hover:text-ivory cursor-pointer"
                 aria-label="Close filters"
               >
-                <X className="size-4" />
+                <X className="size-5" />
               </button>
             </div>
 
@@ -490,14 +490,14 @@ function CollectionPage() {
                     setCaliber("");
                     setCondition("");
                   }}
-                  className="w-full border border-brass-border py-2.5 font-mono text-[0.68rem] tracking-[0.2em] uppercase text-parchment-dim hover:text-ivory"
+                  className="w-full border border-brass-border py-3 font-mono text-xs tracking-[0.2em] uppercase text-parchment-dim hover:text-ivory cursor-pointer"
                 >
                   Clear Selection
                 </button>
               )}
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="w-full bg-brass py-3 font-sans text-xs font-semibold tracking-[0.2em] uppercase text-obsidian hover:bg-brass-light transition-colors"
+                className="w-full bg-brass py-3.5 font-sans text-xs font-semibold tracking-[0.2em] uppercase text-obsidian hover:bg-brass-light transition-colors cursor-pointer"
               >
                 View {results.length} {results.length === 1 ? "Piece" : "Pieces"}
               </button>
@@ -546,14 +546,14 @@ function FilterSelect({
 
 function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
-    <span className="inline-flex items-center gap-1.5 border border-brass-border bg-obsidian-2 px-2.5 py-1 font-mono text-[0.62rem] text-brass">
+    <span className="inline-flex items-center gap-1.5 border border-brass-border/80 bg-obsidian-2 px-2.5 py-1 font-mono text-xs text-brass">
       {label}
       <button
         onClick={onRemove}
-        className="text-parchment-dim hover:text-ivory ml-0.5 cursor-pointer"
+        className="text-parchment-dim hover:text-ivory p-0.5 ml-0.5 cursor-pointer"
         aria-label={`Remove filter ${label}`}
       >
-        <X className="size-3" />
+        <X className="size-3.5" />
       </button>
     </span>
   );
@@ -572,7 +572,7 @@ function MobileFilterSection({
 }) {
   return (
     <div>
-      <p className="font-mono text-[0.62rem] font-medium tracking-[0.2em] uppercase text-parchment-dim mb-2.5">
+      <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-parchment-dim mb-2.5">
         {title}
       </p>
       <div className="flex flex-wrap gap-2">
@@ -583,13 +583,13 @@ function MobileFilterSection({
               key={opt}
               onClick={() => onSelect(opt)}
               className={cn(
-                "border px-2.5 py-1 text-xs transition-colors flex items-center gap-1.5 cursor-pointer",
+                "min-h-[38px] border px-3 py-1.5 text-xs transition-colors flex items-center gap-1.5 cursor-pointer",
                 isSelected
                   ? "border-brass bg-brass text-obsidian font-semibold"
                   : "border-brass-border bg-obsidian text-parchment hover:border-brass-border-strong",
               )}
             >
-              {isSelected && <Check className="size-3 text-obsidian stroke-[3]" />}
+              {isSelected && <Check className="size-3.5 text-obsidian stroke-[3]" />}
               {opt}
             </button>
           );
