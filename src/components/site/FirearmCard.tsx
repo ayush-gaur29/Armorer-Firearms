@@ -36,7 +36,7 @@ export function StatusChip({ status }: { status?: string | undefined }) {
   return (
     <span
       className={cn(
-        "border px-2 py-1 text-[0.6rem] tracking-[0.2em] uppercase",
+        "border bg-obsidian/80 px-2 py-1 text-[0.6rem] tracking-[0.2em] uppercase backdrop-blur",
         sold
           ? "border-parchment-dim/40 text-parchment-dim"
           : hold
