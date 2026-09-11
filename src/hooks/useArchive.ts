@@ -15,14 +15,39 @@ import {
 } from "@/lib/fallbacks";
 
 // Loose shape for raw Firestore documents; every field is optional/unknown.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyDoc = Partial<Record<
-  | "id" | "images" | "image" | "name" | "maker" | "model" | "caliber" | "year" | "price"
-  | "description" | "history" | "condition" | "category" | "status" | "featured" | "serial"
-  | "active" | "title" | "heading" | "subtitle" | "text" | "imageUrl" | "backgroundImage"
-  | "logoUrl" | "ctaPrimary" | "ctaSecondary" | "buttonText" | "tagline" | "displayOrder",
-  any
->>;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+interface AnyDoc {
+  id?: any;
+  images?: any;
+  image?: any;
+  name?: any;
+  maker?: any;
+  model?: any;
+  caliber?: any;
+  year?: any;
+  price?: any;
+  description?: any;
+  history?: any;
+  condition?: any;
+  category?: any;
+  status?: any;
+  featured?: any;
+  serial?: any;
+  active?: any;
+  title?: any;
+  heading?: any;
+  subtitle?: any;
+  text?: any;
+  imageUrl?: any;
+  backgroundImage?: any;
+  logoUrl?: any;
+  ctaPrimary?: any;
+  ctaSecondary?: any;
+  buttonText?: any;
+  tagline?: any;
+  displayOrder?: any;
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 function normalizeFirearm(id: string, d: AnyDoc): Firearm {
   const rawImages = d.images;
