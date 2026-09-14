@@ -63,7 +63,7 @@ export const FALLBACK_HERO: HeroSection = {
   id: "fallback",
   title: "A Private Archive of Historic Arms",
   subtitle:
-    "Curated in the Montana atelier since 1998 — estate acquisitions, museum-grade conservation, and provenance you can trace to the hand that made it.",
+    "Curated in the Montana armory since 1998 — estate acquisitions, museum-grade conservation, and provenance you can trace to the hand that made it.",
   tagline: "Armorer Firearms · Bigfork, Montana",
   imageUrl: heroImg,
   ctaPrimary: "Explore The Archive",
@@ -82,7 +82,7 @@ export const FALLBACK_ABOUT: AboutContent = {
   founded: 1998,
   location: "Bigfork, Montana",
   story:
-    "Armorer Firearms began in 1998 as a single workbench in Bigfork, Montana, restoring family heirlooms for neighbors along Flathead Lake. Over the decades that bench grew into a private archive: a working atelier where historically significant arms are researched, conserved, and placed with collectors who understand what they hold.",
+    "Armorer Firearms began in 1998 as a single workbench in Bigfork, Montana, restoring family heirlooms for neighbors along Flathead Lake. Over the decades that bench grew into a private archive: a working armory where historically significant arms are researched, conserved, and placed with collectors who understand what they hold.",
   history:
     "Our acquisitions come almost entirely from estates, private museums, and multi-generational family collections. We favor pieces with an unbroken paper trail — factory letters, regimental markings, period photographs — and we decline far more than we accept.",
   philosophy:

@@ -13,7 +13,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Arrange a private viewing at the Bigfork, Montana atelier or send a direct inquiry to the Armorer Firearms archive curators. All correspondence held in strict confidence.",
+          "Arrange a private viewing at the Bigfork, Montana armory or send a direct inquiry to the Armorer Firearms archive curators. All correspondence held in strict confidence.",
       },
       { property: "og:title", content: "Armorer Firearms" },
       {
@@ -74,7 +74,7 @@ export function ContactPage() {
             <div className="lg:col-span-7" data-reveal>
               <div className="inline-flex items-center gap-2 border border-brass/30 bg-obsidian-2/80 px-3 py-1 font-mono text-xs tracking-[0.24em] uppercase text-brass">
                 <span className="size-1.5 rounded-full bg-brass animate-pulse" />
-                <span>THE ATELIER · PRIVATE CORRESPONDENCE</span>
+                <span>THE ARMORY · PRIVATE CORRESPONDENCE</span>
               </div>
 
               <h1 className="mt-4 sm:mt-6 font-serif text-3xl sm:text-5xl lg:text-6xl font-light tracking-tight text-ivory leading-[1.08]">
@@ -90,7 +90,7 @@ export function ContactPage() {
               <div className="hairline my-5 sm:my-6 max-w-md" />
 
               <p className="text-base sm:text-lg leading-relaxed text-parchment-dim max-w-2xl">
-                Whether you are seeking a specific historic firearm, placing an estate collection, or wish to arrange a private viewing at our Montana atelier, we welcome your correspondence. All inquiries are received directly by our curatorial team.
+                Whether you are seeking a specific historic firearm, placing an estate collection, or wish to arrange a private viewing at our Montana armory, we welcome your correspondence. All inquiries are received directly by our curatorial team.
               </p>
 
               {/* Provenance Indicators */}
@@ -116,14 +116,14 @@ export function ContactPage() {
                 <div className="relative aspect-[4/3] overflow-hidden bg-obsidian">
                   <ArchiveImage
                     src={contactHeroImg}
-                    alt="Private consultation desk inside the Armorer Firearms atelier in Bigfork Montana"
+                    alt="Private consultation desk inside the Armorer Firearms armory in Bigfork Montana"
                     eager
                     className="transition-transform duration-700 group-hover:scale-[1.02]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-obsidian/70 via-transparent to-transparent pointer-events-none" />
                 </div>
                 <div className="mt-2.5 flex items-center justify-between px-2 py-1 font-mono text-xs tracking-[0.16em] text-brass-dark uppercase">
-                  <span>PLATE 03 · THE CONSULTATION ATELIER</span>
+                  <span>PLATE 03 · THE CONSULTATION ARMORY</span>
                   <span className="text-parchment-dim/60">BIGFORK, MT</span>
                 </div>
               </div>
@@ -142,7 +142,7 @@ export function ContactPage() {
             <aside className="lg:col-span-5 space-y-6 sm:space-y-8" data-reveal>
               <div>
                 <div className="inline-flex items-center gap-2 border-l border-brass pl-3 font-mono text-xs tracking-[0.22em] text-brass uppercase">
-                  ATELIER DOSSIER
+                  ARMORY DOSSIER
                 </div>
                 <h2 className="mt-3 font-serif text-2xl sm:text-4xl text-ivory font-light">
                   Direct Correspondence
@@ -157,7 +157,7 @@ export function ContactPage() {
                 <div className="py-5 sm:py-6 group">
                   <div className="flex items-center gap-2 font-mono text-xs tracking-[0.2em] uppercase text-brass">
                     <MapPin className="size-3.5" aria-hidden />
-                    <span>ATELIER ADDRESS</span>
+                    <span>ARMORY ADDRESS</span>
                   </div>
                   <p className="mt-2 font-serif text-xl text-ivory leading-snug">
                     {contact.address || "119 Jewel Basin Ct"}
@@ -193,7 +193,7 @@ export function ContactPage() {
                     </a>
                   </p>
                   <p className="mt-1 text-xs text-parchment-dim">
-                    Direct atelier line · Monday through Friday
+                    Direct armory line · Monday through Friday
                   </p>
                 </div>
 
@@ -212,7 +212,7 @@ export function ContactPage() {
                     </a>
                   </p>
                   <p className="mt-1 text-xs text-parchment-dim">
-                    Encrypted and monitored daily by atelier staff
+                    Encrypted and monitored daily by armory staff
                   </p>
                 </div>
 
@@ -281,7 +281,7 @@ export function ContactPage() {
               Private Viewings by Appointment
             </h2>
             <p className="mt-3 text-sm text-parchment-dim">
-              The Armorer Firearms collection is preserved in a secure private atelier overlooking Flathead Lake.
+              The Armorer Firearms collection is preserved in a secure private armory overlooking Flathead Lake.
             </p>
           </div>
 
@@ -350,7 +350,7 @@ export function ContactPage() {
           </div>
 
           <p className="mt-6 sm:mt-8 font-mono text-xs tracking-[0.18em] text-brass-dark uppercase">
-            Armorer Firearms Atelier · Bigfork, Montana · Founded 1998
+            Armorer Firearms Armory · Bigfork, Montana · Founded 1998
           </p>
         </div>
       </section>

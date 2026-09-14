@@ -25,27 +25,23 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
     return () => {
       document.body.style.overflow = "";
     };
   }, [open]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        "fixed inset-x-0 top-0 z-40 transition-all duration-300",
         scrolled
-          ? "bg-obsidian/95 backdrop-blur-md border-b border-brass-border/80 shadow-lg"
-          : "bg-gradient-to-b from-obsidian/80 via-obsidian/40 to-transparent border-b border-transparent",
+          ? "border-b border-brass-border/60 bg-background/90 backdrop-blur-md shadow-vault py-1"
+          : "bg-gradient-to-b from-obsidian/85 via-obsidian/45 to-transparent py-2",
       )}
     >
       <div className="mx-auto flex h-16 sm:h-18 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
@@ -58,14 +54,15 @@ export function Header() {
           <BrandMark />
         </Link>
 
-        <div className="hidden items-center gap-8 lg:flex">
-          <nav className="flex items-center gap-8" aria-label="Primary">
+        {/* Desktop nav + cart */}
+        <div className="hidden items-center gap-7 lg:flex">
+          <nav className="flex items-center gap-7" aria-label="Primary">
             {NAV.map((item) => (
               <Link
                 key={item.label}
                 to={item.to}
                 activeOptions={{ exact: item.to === "/" }}
-                className="text-[0.75rem] tracking-[0.22em] uppercase font-medium text-[#F1EDE4] transition-colors hover:text-brass [text-shadow:0_1px_4px_rgba(0,0,0,0.6)] py-1"
+                className="text-[0.75rem] tracking-[0.22em] uppercase font-medium text-ivory transition-colors hover:text-brass [text-shadow:0_1px_4px_rgba(0,0,0,0.6)] light:[text-shadow:none] py-1"
                 activeProps={{ className: "!text-brass font-semibold" }}
               >
                 {item.label}
@@ -73,6 +70,7 @@ export function Header() {
             ))}
           </nav>
 
+          {/* Acquisition Cart */}
           <button
             onClick={openCart}
             className="group relative flex items-center gap-2 border border-brass-border/60 bg-obsidian-2/80 px-3.5 py-1.5 font-mono text-xs tracking-wider uppercase text-parchment transition-all hover:border-brass hover:text-brass cursor-pointer"
@@ -88,7 +86,8 @@ export function Header() {
           </button>
         </div>
 
-        <div className="flex items-center gap-1 lg:hidden">
+        {/* Mobile controls */}
+        <div className="flex items-center gap-2 lg:hidden">
           <button
             onClick={openCart}
             className="relative flex size-10 items-center justify-center text-ivory hover:text-brass transition-colors cursor-pointer"
@@ -124,7 +123,7 @@ export function Header() {
       />
       <aside
         className={cn(
-          "fixed top-16 sm:top-18 right-0 bottom-0 z-50 flex w-[min(22rem,85vw)] flex-col border-l border-brass-border bg-[#131518] px-6 sm:px-8 py-8 sm:py-10 shadow-2xl transition-transform duration-300 ease-out lg:hidden overflow-y-auto",
+          "fixed top-16 sm:top-18 right-0 bottom-0 z-50 flex w-[min(22rem,85vw)] flex-col border-l border-brass-border bg-elevated px-6 sm:px-8 py-8 sm:py-10 shadow-2xl transition-transform duration-300 ease-out lg:hidden overflow-y-auto",
           open ? "translate-x-0" : "translate-x-full",
         )}
         aria-label="Mobile navigation"
@@ -138,7 +137,7 @@ export function Header() {
               activeOptions={{ exact: item.to === "/" }}
               activeProps={{ className: "!text-brass font-semibold !border-brass/60" }}
               onClick={() => setOpen(false)}
-              className="group flex items-center justify-between py-3.5 border-b border-brass-border/30 font-serif text-2xl font-normal text-[#F1EDE4] hover:text-brass transition-colors"
+              className="group flex items-center justify-between py-3.5 border-b border-brass-border/30 font-serif text-2xl font-normal text-ivory hover:text-brass transition-colors"
             >
               <span>{item.label}</span>
               <span className="font-mono text-xs text-brass-dark opacity-0 group-hover:opacity-100 transition-opacity">
@@ -147,9 +146,10 @@ export function Header() {
             </Link>
           ))}
         </nav>
+
         <div className="hairline my-6" />
         <p className="text-xs tracking-wider text-parchment-dim leading-relaxed">
-          Armorer Firearms Atelier<br />
+          Armorer Firearms Armory<br />
           Bigfork, Montana · Est. 1998
         </p>
         <p className="mt-auto pt-8 text-xs text-parchment-dim/70 font-mono tracking-wider">

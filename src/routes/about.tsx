@@ -13,13 +13,13 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "The heritage and philosophy of Armorer Firearms: founded 1998 in Bigfork, Montana. A private collection and working atelier built on estate acquisitions, conservation over restoration, and verified provenance.",
+          "The heritage and philosophy of Armorer Firearms: founded 1998 in Bigfork, Montana. A private collection and working armory built on estate acquisitions, conservation over restoration, and verified provenance.",
       },
       { property: "og:title", content: "Armorer Firearms" },
       {
         property: "og:description",
         content:
-          "Estate acquisitions, preservation philosophy and standards of authenticity from the Montana atelier.",
+          "Estate acquisitions, preservation philosophy and standards of authenticity from the Montana armory.",
       },
     ],
   }),
@@ -75,9 +75,9 @@ export function AboutPage() {
     },
     {
       year: "TODAY",
-      label: "THE WORKING ATELIER & ARCHIVE",
+      label: "THE WORKING ARMORY & ARCHIVE",
       description:
-        "A dedicated research and conservation atelier housing over one hundred and twenty hand-selected historical firearms, catalogued under museum standards and accessible exclusively by private appointment.",
+        "A dedicated research and conservation armory housing over one hundred and twenty hand-selected historical firearms, catalogued under museum standards and accessible exclusively by private appointment.",
     },
   ];
 
@@ -121,7 +121,7 @@ export function AboutPage() {
             <div className="lg:col-span-6 xl:col-span-7" data-reveal>
               <div className="inline-flex items-center gap-2 border border-brass/30 bg-obsidian-2/80 px-3 py-1 font-mono text-xs tracking-[0.24em] uppercase text-brass">
                 <span className="size-1.5 rounded-full bg-brass animate-pulse" />
-                <span>THE ATELIER</span>
+                <span>THE ARMORY</span>
               </div>
 
               <h1 className="mt-4 sm:mt-6 font-serif text-3xl sm:text-5xl lg:text-6xl font-light tracking-tight text-ivory leading-[1.08]">
@@ -139,7 +139,7 @@ export function AboutPage() {
               <div className="hairline my-5 sm:my-6 max-w-md" />
 
               <p className="text-base sm:text-lg leading-relaxed text-parchment-dim max-w-2xl">
-                A private collection and working atelier devoted to the research, conservation, and placement of historically
+                A private collection and working armory devoted to the research, conservation, and placement of historically
                 significant arms. Curated quietly on Flathead Lake, where provenance is traced directly to the hands that carried them.
               </p>
 
@@ -173,7 +173,7 @@ export function AboutPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-obsidian/70 via-transparent to-transparent pointer-events-none" />
                 </div>
                 <div className="mt-2.5 flex items-center justify-between px-2 py-1 font-mono text-xs tracking-[0.16em] text-brass-dark uppercase">
-                  <span>PLATE 01 · ATELIER BENCH</span>
+                  <span>PLATE 01 · ARMORY BENCH</span>
                   <span className="text-parchment-dim/60">EST. 1998</span>
                 </div>
               </div>
@@ -202,7 +202,7 @@ export function AboutPage() {
             <div className="space-y-4 text-sm sm:text-base leading-relaxed text-parchment-dim">
               <p>
                 Armorer Firearms is a privately owned specialty house in Bigfork, Montana. Founded on the western shore of
-                Flathead Lake, the atelier was originally established around fine metallurgy and precious metals appraisal.
+                Flathead Lake, the armory was originally established around fine metallurgy and precious metals appraisal.
               </p>
               <p>
                 Decades of trusted appraisal work brought the house into contact with multi-generational ranching families,
@@ -212,7 +212,7 @@ export function AboutPage() {
             </div>
             <div className="space-y-4 text-sm sm:text-base leading-relaxed text-parchment-dim">
               <p>
-                Rather than treating these historical artifacts as commercial commodities, the atelier evolved into a focused
+                Rather than treating these historical artifacts as commercial commodities, the armory evolved into a focused
                 archive. We chose a deliberate path: we do not advertise to the masses.
               </p>
               <p>
@@ -275,7 +275,7 @@ export function AboutPage() {
               <div className="border-l border-brass-border/40 pl-5 sm:pl-8 space-y-3">
                 <h3 className="font-serif text-xl sm:text-2xl text-ivory">The Modern Specialty House</h3>
                 <p className="text-sm sm:text-base leading-relaxed text-parchment-dim">
-                  Today, the Armorer Firearms atelier operates with quiet discretion. We maintain a curated collection of over one
+                  Today, the Armorer Firearms armory operates with quiet discretion. We maintain a curated collection of over one
                   hundred and twenty exceptional lever-action rifles, single-action revolvers, sporting long guns, and military arms.
                   Each arm is catalogued under museum standards, complete with archival dossiers and honest appraisals.
                 </p>
@@ -325,7 +325,7 @@ export function AboutPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-10 sm:mb-16" data-reveal>
             <div>
-              <p className="font-mono text-xs tracking-[0.22em] text-brass uppercase">ATELIER DOCTRINE</p>
+              <p className="font-mono text-xs tracking-[0.22em] text-brass uppercase">ARMORY DOCTRINE</p>
               <h2 className="mt-2.5 font-serif text-2xl sm:text-4xl lg:text-5xl text-ivory font-light">
                 Collection Philosophy
               </h2>
@@ -363,7 +363,7 @@ export function AboutPage() {
       </section>
 
       {/* ===================================================
-          6. PREMIUM VISUAL FEATURE SECTION: "THE CONSERVATION ATELIER"
+          6. PREMIUM VISUAL FEATURE SECTION: "THE CONSERVATION ARMORY"
       =================================================== */}
       <section className="bg-obsidian-2/20 py-14 sm:py-20 lg:py-28 border-b border-brass-border/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -374,7 +374,7 @@ export function AboutPage() {
                 <div className="relative aspect-[4/3] overflow-hidden bg-obsidian">
                   <ArchiveImage
                     src={conservationDetailImg}
-                    alt="Close-up examination of historical firearm receiver under raking light in the Montana atelier"
+                    alt="Close-up examination of historical firearm receiver under raking light in the Montana armory"
                     className="transition-transform duration-700 group-hover:scale-[1.02]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-obsidian/60 via-transparent to-transparent pointer-events-none" />
@@ -499,7 +499,7 @@ export function AboutPage() {
           </div>
 
           <p className="mt-6 sm:mt-8 font-mono text-xs tracking-[0.18em] text-brass-dark uppercase">
-            Private viewings conducted by appointment at the Grand Avenue Atelier in Bigfork, Montana.
+            Private viewings conducted by appointment at the Grand Avenue Armory in Bigfork, Montana.
           </p>
         </div>
       </section>

@@ -57,7 +57,7 @@ export function InquiryForm({
       toast.success("Your inquiry has been received. A curator will respond shortly.");
       onDone?.();
     } catch {
-      toast.error("We could not send your inquiry. Please try again or telephone the atelier.");
+      toast.error("We could not send your inquiry. Please try again or telephone the armory.");
     } finally {
       setBusy(false);
     }

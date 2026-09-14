@@ -196,7 +196,7 @@ function DetailPage() {
                   to="/contact"
                   className="inline-flex items-center justify-center gap-3 border border-brass-border/80 bg-obsidian-2/80 px-7 py-4 font-mono text-xs tracking-[0.22em] uppercase font-medium text-parchment transition-colors hover:border-brass hover:text-brass"
                 >
-                  <span>Contact Armorer</span>
+                  <span>Contact the Armory</span>
                   <ArrowRight className="size-4" />
                 </Link>
               </div>

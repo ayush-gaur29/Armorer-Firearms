@@ -52,6 +52,28 @@ interface AnyDoc {
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
+function replaceAtelier(val: any): any {
+  if (typeof val === "string") {
+    return val
+      .replace(/\bTHE ATELIER\b/g, "THE ARMORY")
+      .replace(/\bThe Atelier\b/g, "The Armory")
+      .replace(/\bATELIER\b/g, "ARMORY")
+      .replace(/\bAtelier\b/g, "Armory")
+      .replace(/\batelier\b/g, "armory");
+  }
+  if (Array.isArray(val)) {
+    return val.map(replaceAtelier);
+  }
+  if (val && typeof val === "object") {
+    const res: Record<string, any> = {};
+    for (const [k, v] of Object.entries(val)) {
+      res[k] = replaceAtelier(v);
+    }
+    return res;
+  }
+  return val;
+}
+
 function normalizeFirearm(id: string, d: AnyDoc): Firearm {
   const localMatch = FALLBACK_FIREARMS.find(
     (f) =>
@@ -80,14 +102,14 @@ function normalizeFirearm(id: string, d: AnyDoc): Firearm {
 
   return {
     id,
-    name: String(d.name ?? localMatch?.name ?? "Untitled Piece"),
+    name: replaceAtelier(String(d.name ?? localMatch?.name ?? "Untitled Piece")),
     maker: String(d.maker ?? localMatch?.maker ?? ""),
     model: String(d.model ?? localMatch?.model ?? ""),
     caliber: String(d.caliber ?? localMatch?.caliber ?? ""),
     year: (d.year as number | string) ?? localMatch?.year ?? "",
     price: (d.price as number | string | undefined) ?? localMatch?.price,
-    description: String(d.description ?? localMatch?.description ?? ""),
-    history: d.history ? String(d.history) : d.provenance ? String(d.provenance) : localMatch?.history,
+    description: replaceAtelier(String(d.description ?? localMatch?.description ?? "")),
+    history: replaceAtelier(d.history ? String(d.history) : d.provenance ? String(d.provenance) : localMatch?.history),
     condition: String(d.condition ?? localMatch?.condition ?? ""),
     category: String(d.category ?? localMatch?.category ?? "Uncategorized"),
     status: d.status ? String(d.status) : localMatch?.status,
@@ -101,7 +123,7 @@ function normalizeFirearm(id: string, d: AnyDoc): Firearm {
 export function useHero() {
   const [hero, setHero] = useState<HeroSection>(FALLBACK_HERO);
   useEffect(() => {
-    let unsub = () => {};
+    let unsub = () => { };
     let cancelled = false;
     Promise.all([getDb(), import("firebase/firestore")])
       .then(([db, fs]) => {
@@ -115,13 +137,13 @@ export function useHero() {
             if (!pick) return;
             setHero({
               id: String(pick.id),
-              title: String(pick.title ?? pick.heading ?? FALLBACK_HERO.title),
-              subtitle: String(pick.subtitle ?? pick.text ?? pick.description ?? FALLBACK_HERO.subtitle),
-              tagline: pick.tagline ? String(pick.tagline) : FALLBACK_HERO.tagline,
+              title: replaceAtelier(String(pick.title ?? pick.heading ?? FALLBACK_HERO.title)),
+              subtitle: replaceAtelier(String(pick.subtitle ?? pick.text ?? pick.description ?? FALLBACK_HERO.subtitle)),
+              tagline: replaceAtelier(pick.tagline ? String(pick.tagline) : FALLBACK_HERO.tagline),
               imageUrl: String(pick.imageUrl ?? pick.image ?? pick.backgroundImage ?? FALLBACK_HERO.imageUrl),
               logoUrl: pick.logoUrl ? String(pick.logoUrl) : undefined,
-              ctaPrimary: String(pick.ctaPrimary ?? pick.buttonText ?? FALLBACK_HERO.ctaPrimary),
-              ctaSecondary: String(pick.ctaSecondary ?? FALLBACK_HERO.ctaSecondary),
+              ctaPrimary: replaceAtelier(String(pick.ctaPrimary ?? pick.buttonText ?? FALLBACK_HERO.ctaPrimary)),
+              ctaSecondary: replaceAtelier(String(pick.ctaSecondary ?? FALLBACK_HERO.ctaSecondary)),
             });
           },
           () => undefined,
@@ -139,7 +161,7 @@ export function useHero() {
 function useSiteDoc<T extends object>(docId: string, fallback: T): T {
   const [data, setData] = useState<T>(fallback);
   useEffect(() => {
-    let unsub = () => {};
+    let unsub = () => { };
     let cancelled = false;
     Promise.all([getDb(), import("firebase/firestore")])
       .then(([db, fs]) => {
@@ -147,7 +169,7 @@ function useSiteDoc<T extends object>(docId: string, fallback: T): T {
         unsub = fs.onSnapshot(
           fs.doc(db, "site_content", docId),
           (snap) => {
-            if (snap.exists()) setData({ ...fallback, ...(snap.data() as Partial<T>) });
+            if (snap.exists()) setData({ ...fallback, ...replaceAtelier(snap.data() as Partial<T>) });
           },
           () => undefined,
         );
