@@ -140,7 +140,7 @@ function CollectionPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Back button & Eyebrow */}
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <BackButton fallbackTo="/" label="Back to Atelier" />
+            <BackButton fallbackTo="/" label="Back to Main" />
             <span className="font-mono text-xs tracking-[0.2em] uppercase text-parchment-dim/80">
               ACCESSION REGISTER · BIGFORK, MT
             </span>
@@ -387,7 +387,7 @@ function CollectionPage() {
           {results.length > 0 ? (
             <div
               data-reveal-group
-              className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 sm:gap-8"
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-8"
             >
               {results.map((f) => (
                 <FirearmCard key={f.id} firearm={f} />

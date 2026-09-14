@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BrandMark } from "./BrandMark";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/hooks/useCart";
 
 const NAV = [
   { to: "/", label: "Home" },
@@ -12,6 +13,7 @@ const NAV = [
 ] as const;
 
 export function Header() {
+  const { openCart, itemCount } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -56,28 +58,59 @@ export function Header() {
           <BrandMark />
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
-          {NAV.map((item) => (
-            <Link
-              key={item.label}
-              to={item.to}
-              activeOptions={{ exact: item.to === "/" }}
-              className="text-[0.75rem] tracking-[0.22em] uppercase font-medium text-[#F1EDE4] transition-colors hover:text-brass [text-shadow:0_1px_4px_rgba(0,0,0,0.6)] py-1"
-              activeProps={{ className: "!text-brass font-semibold" }}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="hidden items-center gap-8 lg:flex">
+          <nav className="flex items-center gap-8" aria-label="Primary">
+            {NAV.map((item) => (
+              <Link
+                key={item.label}
+                to={item.to}
+                activeOptions={{ exact: item.to === "/" }}
+                className="text-[0.75rem] tracking-[0.22em] uppercase font-medium text-[#F1EDE4] transition-colors hover:text-brass [text-shadow:0_1px_4px_rgba(0,0,0,0.6)] py-1"
+                activeProps={{ className: "!text-brass font-semibold" }}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
 
-        <button
-          className="flex size-11 shrink-0 items-center justify-center -mr-2 text-ivory hover:text-brass lg:hidden cursor-pointer transition-colors active:scale-95"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          onClick={() => setOpen((o) => !o)}
-        >
-          {open ? <X className="size-6" /> : <Menu className="size-6" />}
-        </button>
+          <button
+            onClick={openCart}
+            className="group relative flex items-center gap-2 border border-brass-border/60 bg-obsidian-2/80 px-3.5 py-1.5 font-mono text-xs tracking-wider uppercase text-parchment transition-all hover:border-brass hover:text-brass cursor-pointer"
+            aria-label={`View acquisition cart (${itemCount} pieces)`}
+          >
+            <ShoppingBag className="size-3.5 text-brass" />
+            <span className="text-[0.72rem]">Cart</span>
+            {itemCount > 0 && (
+              <span className="grid size-4 place-items-center rounded-full bg-brass font-sans text-[0.65rem] font-bold text-obsidian">
+                {itemCount}
+              </span>
+            )}
+          </button>
+        </div>
+
+        <div className="flex items-center gap-1 lg:hidden">
+          <button
+            onClick={openCart}
+            className="relative flex size-10 items-center justify-center text-ivory hover:text-brass transition-colors cursor-pointer"
+            aria-label={`View acquisition cart (${itemCount} pieces)`}
+          >
+            <ShoppingBag className="size-5" />
+            {itemCount > 0 && (
+              <span className="absolute top-1 right-1 grid size-4 place-items-center rounded-full bg-brass font-sans text-[0.6rem] font-bold text-obsidian">
+                {itemCount}
+              </span>
+            )}
+          </button>
+
+          <button
+            className="flex size-11 shrink-0 items-center justify-center -mr-2 text-ivory hover:text-brass cursor-pointer transition-colors active:scale-95"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            onClick={() => setOpen((o) => !o)}
+          >
+            {open ? <X className="size-6" /> : <Menu className="size-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile drawer */}

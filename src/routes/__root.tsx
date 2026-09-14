@@ -16,6 +16,9 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import { CartProvider } from "@/hooks/useCart";
+import { CartDrawer } from "@/components/site/CartDrawer";
+import { CheckoutDialog } from "@/components/site/CheckoutDialog";
 
 function NotFoundComponent() {
   return (
@@ -133,15 +136,19 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <div className="flex min-h-screen flex-col overflow-x-clip">
-          <Header />
-          <main className="flex-1">
-            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-            <Outlet />
-          </main>
-          <Footer />
-        </div>
-        <Toaster position="bottom-right" theme="dark" />
+        <CartProvider>
+          <div className="flex min-h-screen flex-col overflow-x-clip">
+            <Header />
+            <main className="flex-1">
+              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+              <Outlet />
+            </main>
+            <Footer />
+          </div>
+          <CartDrawer />
+          <CheckoutDialog />
+          <Toaster position="bottom-right" theme="dark" />
+        </CartProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

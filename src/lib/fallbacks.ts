@@ -56,6 +56,7 @@ export interface Firearm {
   images: string[];
   featured?: boolean | undefined;
   serial?: string | undefined;
+  notes?: string | undefined;
 }
 
 export const FALLBACK_HERO: HeroSection = {
@@ -99,107 +100,69 @@ export const FALLBACK_CONTACT: ContactContent = {
   note: "All transfers are conducted in full compliance with federal and Montana state law through a licensed FFL.",
 };
 
-import remingtonImg from "@/assets/firearms/remington_870_wingmaster.jpg";
-import sigImg from "@/assets/firearms/sig_sauer_p226.jpg";
-import winchesterImg from "@/assets/firearms/winchester_1873.jpg";
-import coltImg from "@/assets/firearms/colt_single_action_army.jpg";
-import browningImg from "@/assets/firearms/browning_hi_power.jpg";
+
+import Chiappa_1874 from "@/assets/firearms/Chiappa_1874.jpeg";
+import Kimber_Model from "@/assets/firearms/Kimber_Model_84_Super.jpeg";
+import Thompson_Model from "@/assets/firearms/Thompson_Model_1927_Chicago.jpeg";
 
 export const FALLBACK_FIREARMS: Firearm[] = [
   {
-    id: "23vst4q1",
-    name: "Remington Model 870 Wingmaster",
-    maker: "Remington Arms",
-    model: "870 Wingmaster",
-    caliber: "12 Gauge",
-    year: 1950,
-    price: 1550,
-    description:
-      "Early production Wingmaster featuring high-gloss American walnut stock with custom checkering, vibra-honed action, and mirror-polished blued receiver. Bore mirror bright with clean modified choke.",
-    history:
-      "Acquired from a private estate in Missoula, Montana. Documented in original dealer ledger and preserved in a climate-controlled gun cabinet for over five decades.",
-    condition: "Fine",
-    category: "Shotguns",
-    status: "Reserved",
-    images: [remingtonImg],
-    featured: true,
-    serial: "S194XXXV",
-  },
-  {
-    id: "2ip1yvuw",
-    name: "Sig Sauer P226",
-    maker: "Sig Sauer",
-    model: "P226",
-    caliber: "9mm Luger",
-    year: 1986,
-    price: 1550,
-    description:
-      "West German triple-matching serial proofed P226 with stamped carbon steel slide, internal extractor, and original stippled polymer grips. Superb double/single action trigger pull.",
-    history:
-      "Imported through Tyson's Corner, Virginia in 1986. Preserved in factory box with matching test target and period paperwork from original owner.",
-    condition: "Fine",
-    category: "Modern Sporting",
-    status: "Available",
-    images: [sigImg],
-    featured: true,
-    serial: "U142XXX",
-  },
-  {
     id: "f6t2atkw",
-    name: "Winchester Model 1873",
-    maker: "Winchester Repeating Arms",
-    model: "Model 1873",
-    caliber: ".44-40 Win",
-    year: 1884,
-    price: 1575,
+    name: "Chiappa 1874 Sharps Sporting Rifle",
+    maker: "Chiappa Firearms",
+    model: "1874 Sharps Sporting",
+    caliber: ".45-70 Government",
+    year: 1874,
+    price: 1895,
     description:
-      "Third Model rifle with full octagon 24-inch barrel, full magazine, and crescent steel buttplate. Retains smooth pewter patina with original untouched walnut stock and clean bore.",
+      "Precision Model 1874 Sharps falling block rifle with 34-inch full octagon blued barrel, color case-hardened receiver, double set triggers, and oil-finished walnut stock.",
     history:
-      "Shipped to the Helena, Montana territory in October 1884. Preserved with Cody Firearms Museum archival certification sheet.",
+      "Faithfully crafted after the historic Sharps Rifle Co. Hartford patterns of 1874. Preserved in archival case with complete inspection dossier from the Bigfork atelier.",
     condition: "Fine",
-    category: "Lever-Action Rifles",
+    category: "Rifles",
     status: "Available",
-    images: [winchesterImg],
+    images: [Chiappa_1874],
     featured: true,
     serial: "174XXXA",
   },
   {
     id: "2hp63s9v",
-    name: "Colt Single Action Army",
-    maker: "Colt's Patent Firearms",
-    model: "Single Action Army",
-    caliber: ".45 Colt",
-    year: 1880,
-    price: 975,
+    name: "Kimber Model 84 Super America Rifle 6x47-1",
+    maker: "Kimber of Oregon",
+    model: "Model 84 Super America",
+    caliber: "6x47 Rem",
+    year: 1984,
+    price: 2450,
     description:
-      "First Generation Frontier Six-Shooter configuration with 4.75-inch barrel, two-line patent address, and smooth oil-finished walnut grips. Mechanically tight four-click action.",
+      "Classic Kimber of Oregon Model 84 Super America rifle featuring select exhibition-grade Claro walnut stock with beaded cheekpiece, wrap-around 24 LPI hand checkering, ebony forend tip, and satin rust-blued barreled action.",
     history:
-      "Purchased through a Miles City, Montana outfitter in 1882. Accompanied by historical letter from Colt Archive Properties.",
-    condition: "Very Good",
-    category: "Revolvers",
+      "Original Clackamas, Oregon production. Preserved in private collector's climate-controlled vault with original factory proof target and inspection card.",
+    condition: "Excellent",
+    category: "Rifles",
     status: "Available",
-    images: [coltImg],
+    images: [Kimber_Model],
     featured: true,
-    serial: "62XXX",
+    serial: "SA-084X",
   },
   {
     id: "v5zvn6dp",
-    name: "Browning Hi-Power",
-    maker: "Fabrique Nationale / Browning",
-    model: "Hi-Power (P-35)",
-    caliber: "9mm Luger",
-    year: 1954,
-    price: 1575,
+    name: "Thompson Model 1927 A1 'Chicago Typewriter'",
+    maker: "Auto-Ordnance",
+    model: "Model 1927 A1 Deluxe",
+    caliber: ".45 ACP",
+    year: 1927,
+    price: 2850,
     description:
-      "Commercial FN production 'thumb-print' slide model with internal extractor, high-polish rust bluing, and checkered French walnut grips with brass medallion.",
+      "Iconic Model 1927 A1 carbine featuring genuine American walnut furniture with vertical foregrip, finned 16.5-inch barrel with Cutts compensator, and authentic 50-round drum magazine.",
     history:
-      "Acquired from the personal collection of an arms historian in Bozeman, Montana. Includes period green canvas case and spare factory magazine.",
+      "Documented tribute piece to the Roaring Twenties. Preserved in custom fitted hard travel case with commemorative manual and certificate.",
     condition: "Fine",
-    category: "Pistols",
+    category: "Carbines",
     status: "Available",
-    images: [browningImg],
+    images: [Thompson_Model],
     featured: true,
-    serial: "58XXX",
+    serial: "KU2812",
+    notes: "Receiver roll-marked Model of 1927 A1, Serial KU2812. Complete with authentic drum magazine and presentation box.",
   },
 ];
 

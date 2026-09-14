@@ -85,13 +85,14 @@ function normalizeFirearm(id: string, d: AnyDoc): Firearm {
     year: (d.year as number | string) ?? localMatch?.year ?? "",
     price: (d.price as number | string | undefined) ?? localMatch?.price,
     description: String(d.description ?? localMatch?.description ?? ""),
-    history: d.history ? String(d.history) : localMatch?.history,
+    history: d.history ? String(d.history) : d.provenance ? String(d.provenance) : localMatch?.history,
     condition: String(d.condition ?? localMatch?.condition ?? ""),
     category: String(d.category ?? localMatch?.category ?? "Uncategorized"),
     status: d.status ? String(d.status) : localMatch?.status,
     images: authoritativeImages,
     featured: Boolean(d.featured ?? localMatch?.featured),
     serial: d.serial ? String(d.serial) : localMatch?.serial,
+    notes: d.notes ? String(d.notes) : localMatch?.notes,
   };
 }
 
@@ -164,60 +165,21 @@ export const useAboutContent = () => useSiteDoc<AboutContent>("about", FALLBACK_
 export const useContactContent = () => useSiteDoc<ContactContent>("contact", FALLBACK_CONTACT);
 
 export function useFirearms() {
-  const [firearms, setFirearms] = useState<Firearm[]>(FALLBACK_FIREARMS);
-  const [live, setLive] = useState(false);
-  useEffect(() => {
-    let unsub = () => {};
-    let cancelled = false;
-    Promise.all([getDb(), import("firebase/firestore")])
-      .then(([db, fs]) => {
-        if (cancelled) return;
-        unsub = fs.onSnapshot(
-          fs.collection(db, "firearms"),
-          (snap) => {
-            if (snap.empty) return;
-            setFirearms(snap.docs.map((s) => normalizeFirearm(s.id, s.data() as AnyDoc)));
-            setLive(true);
-          },
-          () => undefined,
-        );
-      })
-      .catch(() => undefined);
-    return () => {
-      cancelled = true;
-      unsub();
-    };
-  }, []);
-  return { firearms, live };
+  return { firearms: FALLBACK_FIREARMS, live: false };
 }
 
 export function useFirearm(id: string) {
   const [firearm, setFirearm] = useState<Firearm | null | undefined>(
-    () => FALLBACK_FIREARMS.find((f) => f.id === id) ?? undefined,
+    () => FALLBACK_FIREARMS.find((f) => f.id === id || accessionNo(f.id) === accessionNo(id)) ?? undefined,
   );
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    let unsub = () => {};
-    let cancelled = false;
-    Promise.all([getDb(), import("firebase/firestore")])
-      .then(([db, fs]) => {
-        if (cancelled) return;
-        unsub = fs.onSnapshot(
-          fs.doc(db, "firearms", id),
-          (snap) => {
-            if (snap.exists()) setFirearm(normalizeFirearm(snap.id, snap.data() as AnyDoc));
-            else setFirearm((prev) => prev ?? null);
-            setLoading(false);
-          },
-          () => setLoading(false),
-        );
-      })
-      .catch(() => setLoading(false));
-    return () => {
-      cancelled = true;
-      unsub();
-    };
+    const item = FALLBACK_FIREARMS.find((f) => f.id === id || accessionNo(f.id) === accessionNo(id));
+    setFirearm(item ?? null);
+    setLoading(false);
   }, [id]);
+
   return { firearm, loading };
 }
 
