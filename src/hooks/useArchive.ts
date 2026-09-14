@@ -29,6 +29,8 @@ interface AnyDoc {
   price?: any;
   description?: any;
   history?: any;
+  provenance?: any;
+  notes?: any;
   condition?: any;
   category?: any;
   status?: any;

@@ -20,6 +20,7 @@ export function CartDrawer() {
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
+    return undefined;
   }, [isOpen, closeCart]);
 
   if (!isOpen) return null;
