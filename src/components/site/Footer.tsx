@@ -13,14 +13,14 @@ export function Footer() {
             A private collection and working armory devoted to the research, conservation, and placement of historically
             significant arms. Founded 1998, Bigfork, Montana.
           </p>
-          <p className="mt-5 font-mono text-xs tracking-[0.2em] text-brass-dark">48.0633° N, 114.0724° W</p>
+          <p className="mt-5 font-mono text-xs tracking-[0.2em] text-brass-dark">48°03'47.9"N 114°04'20.6"W</p>
         </div>
 
         <div>
           <p className="eyebrow mb-4">Archive</p>
           <ul className="space-y-2 text-sm text-parchment-dim">
+            <li><Link to="/" className="inline-block py-1 hover:text-brass transition-colors">Home</Link></li>
             <li><Link to="/collection" className="inline-block py-1 hover:text-brass transition-colors">Full Collection</Link></li>
-            <li><Link to="/about" className="inline-block py-1 hover:text-brass transition-colors">Heritage &amp; Armory</Link></li>
             <li><Link to="/contact" className="inline-block py-1 hover:text-brass transition-colors">Contact &amp; Inquiries</Link></li>
           </ul>
         </div>
