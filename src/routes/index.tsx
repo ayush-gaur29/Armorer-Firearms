@@ -61,8 +61,8 @@ function HomePage() {
 
           <div className="hero-enter-stats mt-2.5 sm:mt-3 grid grid-cols-1 gap-2 border-y border-brass-border/80 py-2 sm:py-2.5 sm:grid-cols-2 sm:gap-6 sm:divide-x sm:divide-brass-border/80">
             <div className="flex flex-col gap-0.5 sm:px-6 sm:first:pl-0">
-              <span className="font-serif text-2xl sm:text-3xl text-brass-light leading-tight">120+</span>
-              <span className="text-xs font-medium tracking-[0.2em] uppercase text-parchment-dim">Curated Pieces</span>
+              <span className="font-serif text-2xl sm:text-3xl text-brass-light leading-tight">COLLECTION FOCUS</span>
+              <span className="text-xs font-medium tracking-[0.2em] uppercase text-parchment-dim">HISTORIC ARMS & FIREARMS</span>
             </div>
             <div className="flex flex-col gap-0.5 border-t border-brass-border/50 pt-2 sm:border-t-0 sm:pt-0 sm:px-6">
               <span className="font-serif text-2xl sm:text-3xl text-brass-light light:text-brass-dark leading-tight">Bigfork, MT Armory</span>

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { ArrowRight, CheckCircle2, AlertCircle, ChevronDown, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, AlertCircle, ChevronDown, Sparkles, RotateCcw } from "lucide-react";
 import { submitInquiry, useFirearms } from "@/hooks/useArchive";
 import { cn } from "@/lib/utils";
 
@@ -205,6 +205,18 @@ export function InquiryForm({
     }
   }
 
+  function handleResend() {
+    setValues({
+      name: "",
+      email: "",
+      phone: "",
+      firearmInterest: firearmName ?? "",
+      message: "",
+    });
+    setErrors({});
+    setSent(false);
+  }
+
   if (sent) {
     return (
       <div className="border border-brass/60 bg-obsidian-2/90 p-8 sm:p-10 text-center shadow-2xl">
@@ -216,6 +228,16 @@ export function InquiryForm({
         <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-parchment-dim">
           A curator will review your message and respond within two business days. Private viewings are arranged strictly by appointment.
         </p>
+        <div className="mt-8 flex justify-center">
+          <button
+            type="button"
+            onClick={handleResend}
+            className="group inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-none border border-brass bg-brass px-6 py-2.5 font-mono text-[0.72rem] font-semibold tracking-[0.24em] uppercase text-obsidian transition-all duration-300 hover:bg-brass-light hover:border-brass-light hover:shadow-lg hover:shadow-brass/20 cursor-pointer"
+          >
+            <RotateCcw className="size-3.5 transition-transform duration-300 group-hover:-rotate-45" aria-hidden />
+            <span>RESEND QUERY</span>
+          </button>
+        </div>
       </div>
     );
   }
@@ -283,7 +305,7 @@ export function InquiryForm({
         <button
           type="submit"
           disabled={busy}
-          className="group inline-flex items-center justify-center gap-3 rounded-none border border-brass bg-brass px-8 py-4 font-mono text-[0.72rem] font-semibold tracking-[0.24em] uppercase text-obsidian transition-all duration-300 hover:bg-brass-light hover:border-brass-light hover:shadow-lg hover:shadow-brass/20 disabled:opacity-50 cursor-pointer"
+          className="group inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-none border border-brass bg-brass px-6 py-2.5 font-mono text-[0.72rem] font-semibold tracking-[0.24em] uppercase text-obsidian transition-all duration-300 hover:bg-brass-light hover:border-brass-light hover:shadow-lg hover:shadow-brass/20 disabled:opacity-50 cursor-pointer shrink-0 self-start sm:self-auto"
         >
           <span>{busy ? "TRANSMITTING…" : "SUBMIT INQUIRY"}</span>
           <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
