@@ -15,11 +15,11 @@ export function BrandMark({
       <img
         src={logoImg}
         alt="Armorer Firearms"
-        width={large ? 48 : 36}
-        height={large ? 48 : 36}
+        width={large ? 54 : 40}
+        height={large ? 54 : 40}
         className={cn(
           "shrink-0 object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] transition-transform duration-300 hover:scale-105",
-          large ? "h-10 sm:h-12 w-auto" : "h-7.5 sm:h-8.5 md:h-9 w-auto",
+          large ? "h-11 sm:h-13.5 w-auto" : "h-8.5 sm:h-9.5 md:h-10 w-auto",
         )}
       />
       {!hideText && (
