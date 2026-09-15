@@ -1,7 +1,8 @@
 Add-Type -AssemblyName System.Drawing
 
-$sourcePath = "C:\Users\Uxdlab\Documents\GitHub\obsidian-archive\src\assets\logo.png"
-$publicDir = "C:\Users\Uxdlab\Documents\GitHub\obsidian-archive\public"
+$rootDir = Split-Path -Parent $PSScriptRoot
+$sourcePath = Join-Path $rootDir "src\assets\logo.png"
+$publicDir = Join-Path $rootDir "public"
 
 $src = [System.Drawing.Bitmap]::FromFile($sourcePath)
 
