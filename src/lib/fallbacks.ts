@@ -104,6 +104,8 @@ export const FALLBACK_CONTACT: ContactContent = {
 import Chiappa_1874 from "@/assets/firearms/Chiappa_1874.jpeg";
 import Kimber_Model from "@/assets/firearms/Kimber_Model_84_Super.jpeg";
 import Thompson_Model from "@/assets/firearms/Thompson_Model_1927_Chicago.jpeg";
+import Winchester_1873 from "@/assets/firearms/winchester_1873.jpg";
+import Browning_Hi_Power from "@/assets/firearms/browning_hi_power.jpg";
 
 export const FALLBACK_FIREARMS: Firearm[] = [
   {
@@ -119,9 +121,9 @@ export const FALLBACK_FIREARMS: Firearm[] = [
     history:
       "Faithfully crafted after the historic Sharps Rifle Co. Hartford patterns of 1874. Preserved in archival case with complete inspection dossier from the Bigfork atelier.",
     condition: "Fine",
-    category: "Rifles",
+    category: "Rifle",
     status: "Available",
-    images: [Chiappa_1874],
+    images: [Chiappa_1874, Winchester_1873],
     featured: true,
     serial: "174XXXA",
   },
@@ -138,9 +140,9 @@ export const FALLBACK_FIREARMS: Firearm[] = [
     history:
       "Original Clackamas, Oregon production. Preserved in private collector's climate-controlled vault with original factory proof target and inspection card.",
     condition: "Excellent",
-    category: "Rifles",
+    category: "Rifle",
     status: "Available",
-    images: [Kimber_Model],
+    images: [Kimber_Model, Winchester_1873],
     featured: true,
     serial: "SA-084X",
   },
@@ -157,9 +159,9 @@ export const FALLBACK_FIREARMS: Firearm[] = [
     history:
       "Documented tribute piece to the Roaring Twenties. Preserved in custom fitted hard travel case with commemorative manual and certificate.",
     condition: "Fine",
-    category: "Carbines",
+    category: "Rifle",
     status: "Available",
-    images: [Thompson_Model],
+    images: [Thompson_Model, Browning_Hi_Power],
     featured: true,
     serial: "KU2812",
     notes: "Receiver roll-marked Model of 1927 A1, Serial KU2812. Complete with authentic drum magazine and presentation box.",

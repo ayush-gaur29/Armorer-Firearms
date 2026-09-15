@@ -60,10 +60,6 @@ function DetailPage() {
     );
   }
 
-  const related = firearms
-    .filter((f) => f.id !== firearm.id && f.category === firearm.category)
-    .slice(0, 3);
-
   const inCart = isInCart(firearm.id);
 
   const handleCartClick = () => {
@@ -78,10 +74,10 @@ function DetailPage() {
     <>
       <section className="pt-24 pb-12 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Navigation Bar: Back to Main & Breadcrumb */}
+          {/* Navigation Bar: Back to Collection & Breadcrumb */}
           <div className="mb-6 sm:mb-8 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <BackButton fallbackTo="/" label="Back to Main" />
+              <BackButton fallbackTo="/collection" label="Back to Collection" />
               <span className="text-brass-border/80">/</span>
               <Link
                 to="/collection"
@@ -90,17 +86,6 @@ function DetailPage() {
                 Collection
               </Link>
             </div>
-
-            {/* Armorer Content Management Trigger
-            <button
-              onClick={() => setEditorOpen(true)}
-              className="inline-flex items-center gap-2 border border-brass-border/60 bg-obsidian-2/80 px-3.5 py-2 font-mono text-xs tracking-wider uppercase text-parchment-dim hover:border-brass hover:text-brass transition-colors cursor-pointer"
-              title="Edit firearm information, description, or historical provenance"
-            >
-              <Edit3 className="size-3.5 text-brass" />
-              <span>Edit Record</span>
-            </button>
-            */}
           </div>
 
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-12" data-reveal>
@@ -116,7 +101,7 @@ function DetailPage() {
                   className="animate-in fade-in duration-500 h-full w-full object-contain drop-shadow-[0_6px_16px_rgba(0,0,0,0.16)]"
                 />
                 <span className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-obsidian/95 px-2.5 py-1 font-mono text-xs tracking-[0.16em] text-brass backdrop-blur border border-brass-border/40 shadow-sm">
-                  ACCESSION NO. {accessionNo(firearm.id)}
+                  ITEM # {accessionNo(firearm.id)}
                 </span>
               </div>
 
@@ -160,9 +145,9 @@ function DetailPage() {
                 {formatPrice(firearm.price)}
               </p>
 
-              {/* Firearm Description */}
+              {/* Firearm Description - Expandable based on content */}
               {firearm.description && (
-                <p className="mt-4 text-sm sm:text-base leading-relaxed text-parchment-dim">
+                <p className="mt-4 text-sm sm:text-base leading-relaxed text-parchment-dim whitespace-pre-line break-words">
                   {firearm.description}
                 </p>
               )}
@@ -172,6 +157,7 @@ function DetailPage() {
                 <button
                   type="button"
                   onClick={handleCartClick}
+                  suppressHydrationWarning
                   className={cn(
                     "flex-1 inline-flex items-center justify-center gap-3 px-8 py-4 font-mono text-xs tracking-[0.22em] uppercase font-semibold transition-all cursor-pointer active:scale-[0.99]",
                     inCart
@@ -196,15 +182,9 @@ function DetailPage() {
                   to="/contact"
                   className="inline-flex items-center justify-center gap-3 border border-brass-border/80 bg-obsidian-2/80 px-7 py-4 font-mono text-xs tracking-[0.22em] uppercase font-medium text-parchment transition-colors hover:border-brass hover:text-brass"
                 >
-                  <span>Contact the Armory</span>
+                  <span>Contact the Armorer</span>
                   <ArrowRight className="size-4" />
                 </Link>
-              </div>
-
-              {/* Assurance strip */}
-              <div className="mt-6 border-t border-brass-border/40 pt-4 flex items-center justify-between text-xs font-mono text-parchment-dim/70">
-                <span>VERIFIED PROVENANCE</span>
-                <span>MONTANA FFL TRANSFER</span>
               </div>
             </div>
           </div>
@@ -244,28 +224,6 @@ function DetailPage() {
           )}
         </div>
       </section>
-
-      {/* Related Pieces */}
-      {related.length > 0 && (
-        <section className="py-14 sm:py-20 border-t border-brass-border/40">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div data-reveal>
-              <p className="eyebrow">Related Pieces</p>
-              <h2 className="mt-2 sm:mt-3 font-serif text-2xl sm:text-3xl text-ivory">
-                More from {firearm.category}
-              </h2>
-            </div>
-            <div
-              data-reveal-group
-              className="mt-8 sm:mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-8"
-            >
-              {related.map((f) => (
-                <FirearmCard key={f.id} firearm={f} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Armorer Content Editor Modal */}
       <FirearmContentEditor

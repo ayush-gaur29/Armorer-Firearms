@@ -26,7 +26,7 @@ export const Route = createFileRoute("/about")({
   component: AboutPage,
 });
 
-export function AboutPage() {
+function AboutPage() {
   const about = useAboutContent();
 
   const philosophyPillars = [

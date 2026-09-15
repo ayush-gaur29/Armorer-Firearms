@@ -10,10 +10,10 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useFirearms } from "@/hooks/useArchive";
-import { FirearmCard, FirearmCardSkeleton, ArchiveImage } from "@/components/site/FirearmCard";
+import { FirearmCard, FirearmCardSkeleton } from "@/components/site/FirearmCard";
 import { BackButton } from "@/components/site/BackButton";
-import collectionHeroImg from "@/assets/collection_hero_archival.jpg";
 import { cn } from "@/lib/utils";
+import collectionHeroImg from "@/assets/collection_hero_archival.jpg";
 
 export const Route = createFileRoute("/collection/")({
   head: () => ({
@@ -43,7 +43,7 @@ const toNum = (v: unknown) => {
 };
 
 function CollectionPage() {
-  const { firearms } = useFirearms();
+  const { firearms, loading } = useFirearms();
   const [q, setQ] = useState("");
   const [category, setCategory] = useState("");
   const [maker, setMaker] = useState("");
@@ -70,28 +70,18 @@ function CollectionPage() {
     [firearms],
   );
 
-  // Calculate statistics dynamically
-  const stats = useMemo(() => {
-    const years = firearms
-      .map((f) => toNum(f.year))
-      .filter((y) => y > 1800 && y < 2100)
-      .sort((a, b) => a - b);
-    const minYear = years.length ? years[0] : 1880;
-    const maxYear = years.length ? years[years.length - 1] : 1986;
-    return {
-      piecesCount: firearms.length,
-      categoriesCount: categories.length,
-      yearSpan: `${minYear} – ${maxYear}`,
-      documentedPercent: "100%",
-    };
-  }, [firearms, categories]);
+  const matchesCategory = (itemCategory: string | undefined, selectedCategory: string) => {
+    if (!selectedCategory) return true;
+    if (!itemCategory) return false;
+    return itemCategory.toLowerCase().trim() === selectedCategory.toLowerCase().trim();
+  };
 
   // Filter & Sort Results
   const results = useMemo(() => {
     const needle = q.trim().toLowerCase();
     const list = firearms.filter(
       (f) =>
-        (!category || f.category === category) &&
+        matchesCategory(f.category, category) &&
         (!maker || f.maker === maker) &&
         (!caliber || f.caliber === caliber) &&
         (!condition || f.condition === condition) &&
@@ -140,373 +130,373 @@ function CollectionPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Back button & Eyebrow */}
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <BackButton fallbackTo="/" label="Back to Armory" />
+            <BackButton fallbackTo="/" label="Back to Main" />
             <span className="font-mono text-xs tracking-[0.2em] uppercase text-parchment-dim/80">
               ACCESSION REGISTER · BIGFORK, MT
             </span>
-          </div >
-
-    <div className="grid gap-8 lg:grid-cols-12 lg:gap-12 lg:items-center">
-      {/* Left Column: Heading & Archival Description */}
-      <div className="lg:col-span-7" data-reveal>
-        <div className="flex items-center gap-3">
-          <span className="h-px w-6 bg-brass" />
-          <p className="font-mono text-xs font-medium tracking-[0.24em] uppercase text-brass">
-            THE ARMORER ARCHIVE
-          </p>
-        </div>
-
-        <h1 className="mt-4 font-serif text-[clamp(2.2rem,5.5vw,4.85rem)] font-normal leading-[1.06] tracking-tight text-ivory drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)] light:drop-shadow-none">
-          The Collection
-        </h1>
-
-        <p className="mt-4 max-w-xl font-sans text-base leading-relaxed text-[#E8E3D9] light:text-foreground [text-shadow:0_1px_6px_rgba(0,0,0,0.5)] light:[text-shadow:none] sm:text-lg">
-          Every piece is examined, documented, and conserved in our Montana armory before
-          it enters the permanent public register. Filter by maker, caliber, or condition, or
-          explore the catalog directly.
-        </p>
-      </div>
-
-      {/* Right Column: Premium Archival Firearm Presentation */}
-      <div className="lg:col-span-5" data-reveal-image>
-        <div className="group relative border border-brass-border/60 bg-obsidian-3/80 p-2 shadow-2xl transition-all duration-500 hover:border-brass/50">
-          <div className="relative aspect-[4/3] overflow-hidden bg-obsidian">
-            <ArchiveImage
-              src={collectionHeroImg}
-              alt="Armorer Firearms historic collection display inside the Montana armory"
-              eager
-              className="transition-transform duration-700 group-hover:scale-[1.02]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-obsidian/60 via-transparent to-transparent pointer-events-none" />
-            <div className="absolute inset-0 ring-1 ring-inset ring-brass/10 pointer-events-none" />
           </div>
-          <div className="mt-2.5 flex items-center justify-between px-2 py-0.5 font-mono text-xs tracking-[0.16em] text-brass-dark uppercase">
-            <span>THE ARMORER ARCHIVE</span>
-            <span className="text-parchment-dim/70">PRIVATE COLLECTION</span>
+
+          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-12">
+            {/* Left: Text content */}
+            <div data-reveal className="flex-1 max-w-3xl">
+              <div className="flex items-center gap-3">
+                <span className="h-px w-6 bg-brass" />
+                <p className="font-mono text-xs font-medium tracking-[0.24em] uppercase text-brass">
+                  THE ARMORER ARCHIVE
+                </p>
+              </div>
+
+              <h1 className="mt-4 font-serif text-[clamp(2.2rem,5.5vw,4.85rem)] font-normal leading-[1.06] tracking-tight text-ivory drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)] light:drop-shadow-none">
+                The Collection
+              </h1>
+
+              <p className="mt-4 max-w-2xl font-sans text-base leading-relaxed text-[#E8E3D9] light:text-foreground [text-shadow:0_1px_6px_rgba(0,0,0,0.5)] light:[text-shadow:none] sm:text-lg">
+                Every piece is examined, documented, and conserved in our Montana armory before
+                it enters the permanent public register. Filter by maker, caliber, or condition, or
+                explore the catalog directly.
+              </p>
+            </div>
+
+            {/* Right: Hero image */}
+            <div className="mt-8 lg:mt-0 lg:w-[42%] xl:w-[38%] shrink-0">
+              <div className="relative overflow-hidden border border-brass-border/60 shadow-[0_8px_40px_rgba(0,0,0,0.55)]">
+                <img
+                  src={collectionHeroImg}
+                  alt="Armorer Firearms Collection"
+                  className="w-full h-[260px] sm:h-[320px] lg:h-[360px] object-cover"
+                  loading="eager"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-obsidian/40 via-transparent to-transparent pointer-events-none" />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
 
-  {/* Archival Statistics Strip */ }
-  <div
-    data-reveal
-    className="mt-10 grid grid-cols-2 gap-4 border-t border-brass-border/60 pt-6 sm:mt-12 sm:grid-cols-4 sm:gap-6 sm:pt-8"
-  >
-    <div>
-      <p className="font-serif text-2xl sm:text-3xl lg:text-4xl text-brass-light">{stats.piecesCount}</p>
-      <p className="mt-1 font-mono text-xs font-medium tracking-[0.16em] uppercase text-parchment-dim">
-        Pieces In Archive
-      </p>
-    </div>
-    <div>
-      <p className="font-serif text-2xl sm:text-3xl lg:text-4xl text-brass-light">{stats.categoriesCount}</p>
-      <p className="mt-1 font-mono text-xs font-medium tracking-[0.16em] uppercase text-parchment-dim">
-        Curated Categories
-      </p>
-    </div>
-    <div>
-      <p className="font-serif text-2xl sm:text-3xl lg:text-4xl text-brass-light">{stats.yearSpan}</p>
-      <p className="mt-1 font-mono text-xs font-medium tracking-[0.16em] uppercase text-parchment-dim">
-        Historical Span
-      </p>
-    </div>
-    <div>
-      <p className="font-serif text-2xl sm:text-3xl lg:text-4xl text-brass-light">{stats.documentedPercent}</p>
-      <p className="mt-1 font-mono text-xs font-medium tracking-[0.16em] uppercase text-parchment-dim">
-        Provenance Documented
-      </p>
-    </div>
-  </div>
-        </div >
-      </section >
 
-    {/* SEARCH & FILTERS BAR (Sticky) */ }
-    < section className = "sticky top-16 sm:top-18 z-30 border-b border-brass-border/80 bg-obsidian/95 backdrop-blur-md shadow-lg transition-all" >
-      <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8">
-        {/* Desktop Search & Filters */}
-        <div className="hidden lg:grid lg:grid-cols-[1.8fr_repeat(4,1fr)_1.2fr] lg:gap-3">
-          {/* Search */}
-          <div className="relative">
-            <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-parchment-dim" />
-            <input
-              type="text"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search archive by maker, model, caliber..."
-              className="h-10 w-full rounded-none border border-brass-border bg-obsidian-2/80 pl-10 pr-9 text-xs tracking-wider text-ivory placeholder:text-parchment-dim/60 focus:border-brass focus:outline-none focus:ring-1 focus:ring-brass transition-colors"
-              aria-label="Search the archive"
-            />
-            {q && (
-              <button
-                onClick={() => setQ("")}
-                className="absolute top-1/2 right-2.5 -translate-y-1/2 text-parchment-dim hover:text-ivory"
-                aria-label="Clear search"
-              >
-                <X className="size-3.5" />
-              </button>
-            )}
-          </div>
-
-          {/* Selects */}
-          <FilterSelect
-            label="Category"
-            value={category}
-            onChange={setCategory}
-            options={categories}
-          />
-          <FilterSelect label="Maker" value={maker} onChange={setMaker} options={makers} />
-          <FilterSelect
-            label="Caliber"
-            value={caliber}
-            onChange={setCaliber}
-            options={calibers}
-          />
-          <FilterSelect
-            label="Condition"
-            value={condition}
-            onChange={setCondition}
-            options={conditions}
-          />
-
-          {/* Sort */}
-          <div className="relative">
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value as SortKey)}
-              aria-label="Sort catalog"
-              className="h-10 w-full rounded-none border border-brass-border bg-obsidian-2/80 px-3 text-xs tracking-wider text-ivory focus:border-brass focus:outline-none focus:ring-1 focus:ring-brass transition-colors cursor-pointer"
-            >
-              <option value="year-asc">Year · Oldest First</option>
-              <option value="year-desc">Year · Newest First</option>
-              <option value="price-asc">Price · Low to High</option>
-              <option value="price-desc">Price · High to Low</option>
-              <option value="name">Name · A to Z</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Mobile & Tablet Search & Filter Controls (<1024px) */}
-        <div className="flex flex-col gap-2.5 lg:hidden">
-          {/* Search */}
-          <div className="relative w-full">
-            <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-parchment-dim" />
-            <input
-              type="text"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search archive by maker, model..."
-              className="h-11 w-full rounded-none border border-brass-border bg-obsidian-2/90 pl-10 pr-10 text-xs sm:text-sm tracking-wider text-ivory placeholder:text-parchment-dim/60 focus:border-brass focus:outline-none focus:ring-1 focus:ring-brass"
-              aria-label="Search the archive"
-            />
-            {q && (
-              <button
-                onClick={() => setQ("")}
-                className="absolute top-1/2 right-2.5 -translate-y-1/2 p-1.5 text-parchment-dim hover:text-ivory"
-                aria-label="Clear search"
-              >
-                <X className="size-4" />
-              </button>
-            )}
-          </div>
-
-          {/* Filter Drawer Trigger & Sort */}
-          <div className="flex items-center gap-2">
+      {/* SEARCH & FILTERS BAR (Sticky) */}
+      <section className="sticky top-16 sm:top-18 z-30 border-b border-brass-border/80 bg-obsidian/95 backdrop-blur-md shadow-lg transition-all">
+        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8">
+          {/* Category Tabs within existing search/archive area */}
+          <div className="mb-3 flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             <button
-              onClick={() => setMobileFilterOpen(true)}
+              type="button"
+              onClick={() => setCategory("")}
               className={cn(
-                "flex-1 h-11 inline-flex items-center justify-center gap-2 border px-3 text-xs font-semibold tracking-wider uppercase transition-colors active:scale-[0.99]",
-                activeFiltersCount > 0
-                  ? "border-brass bg-brass/15 text-brass"
-                  : "border-brass-border bg-obsidian-2 text-parchment hover:border-brass-border-strong",
+                "shrink-0 whitespace-nowrap px-3 py-1.5 font-mono text-[0.68rem] tracking-[0.14em] uppercase transition-colors border cursor-pointer",
+                !category
+                  ? "border-brass bg-brass text-obsidian font-bold"
+                  : "border-brass-border/60 bg-obsidian-2/80 text-parchment-dim hover:border-brass hover:text-ivory"
               )}
-              aria-label="Open filter drawer"
             >
-              <SlidersHorizontal className="size-3.5" />
-              <span>Filters</span>
-              {activeFiltersCount > 0 && (
-                <span className="grid size-4.5 place-items-center rounded-full bg-brass text-xs font-bold text-obsidian">
-                  {activeFiltersCount}
-                </span>
-              )}
+              All Pieces
             </button>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setCategory(category === cat ? "" : cat)}
+                className={cn(
+                  "shrink-0 whitespace-nowrap px-3 py-1.5 font-mono text-[0.68rem] tracking-[0.14em] uppercase transition-colors border cursor-pointer",
+                  category === cat
+                    ? "border-brass bg-brass text-obsidian font-bold"
+                    : "border-brass-border/60 bg-obsidian-2/80 text-parchment-dim hover:border-brass hover:text-ivory"
+                )}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
 
-            <div className="flex-1 relative">
+          {/* Desktop Search & Filters */}
+          <div className="hidden lg:grid lg:grid-cols-[1.8fr_repeat(4,1fr)_1.2fr] lg:gap-3">
+            {/* Search */}
+            <div className="relative">
+              <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-parchment-dim" />
+              <input
+                type="text"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search archive by maker, model, caliber..."
+                className="h-10 w-full rounded-none border border-brass-border bg-obsidian-2/80 pl-10 pr-9 text-xs tracking-wider text-ivory placeholder:text-parchment-dim/60 focus:border-brass focus:outline-none focus:ring-1 focus:ring-brass transition-colors"
+                aria-label="Search the archive"
+              />
+              {q && (
+                <button
+                  onClick={() => setQ("")}
+                  className="absolute top-1/2 right-2.5 -translate-y-1/2 text-parchment-dim hover:text-ivory"
+                  aria-label="Clear search"
+                >
+                  <X className="size-3.5" />
+                </button>
+              )}
+            </div>
+
+            {/* Selects */}
+            <FilterSelect
+              label="Category"
+              value={category}
+              onChange={setCategory}
+              options={categories}
+            />
+            <FilterSelect label="Maker" value={maker} onChange={setMaker} options={makers} />
+            <FilterSelect
+              label="Caliber"
+              value={caliber}
+              onChange={setCaliber}
+              options={calibers}
+            />
+            <FilterSelect
+              label="Condition"
+              value={condition}
+              onChange={setCondition}
+              options={conditions}
+            />
+
+            {/* Sort */}
+            <div className="relative">
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
-                aria-label="Sort collection"
-                className="h-11 w-full rounded-none border border-brass-border bg-obsidian-2 px-3 text-xs tracking-wider text-ivory focus:border-brass focus:outline-none"
+                aria-label="Sort catalog"
+                className="h-10 w-full rounded-none border border-brass-border bg-obsidian-2/80 px-3 text-xs tracking-wider text-ivory focus:border-brass focus:outline-none focus:ring-1 focus:ring-brass transition-colors cursor-pointer"
               >
-                <option value="year-asc">Year · Oldest</option>
-                <option value="year-desc">Year · Newest</option>
-                <option value="price-asc">Price · Low</option>
-                <option value="price-desc">Price · High</option>
-                <option value="name">Name · A–Z</option>
+                <option value="year-asc">Year · Oldest First</option>
+                <option value="year-desc">Year · Newest First</option>
+                <option value="price-asc">Price · Low to High</option>
+                <option value="price-desc">Price · High to Low</option>
+                <option value="name">Name · A to Z</option>
               </select>
             </div>
           </div>
+
+          {/* Mobile & Tablet Search & Filter Controls (<1024px) */}
+          <div className="flex flex-col gap-2.5 lg:hidden">
+            {/* Search */}
+            <div className="relative w-full">
+              <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-parchment-dim" />
+              <input
+                type="text"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search archive by maker, model..."
+                className="h-11 w-full rounded-none border border-brass-border bg-obsidian-2/90 pl-10 pr-10 text-xs sm:text-sm tracking-wider text-ivory placeholder:text-parchment-dim/60 focus:border-brass focus:outline-none focus:ring-1 focus:ring-brass"
+                aria-label="Search the archive"
+              />
+              {q && (
+                <button
+                  onClick={() => setQ("")}
+                  className="absolute top-1/2 right-2.5 -translate-y-1/2 p-1.5 text-parchment-dim hover:text-ivory"
+                  aria-label="Clear search"
+                >
+                  <X className="size-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Filter Drawer Trigger & Sort */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setMobileFilterOpen(true)}
+                className={cn(
+                  "flex-1 h-11 inline-flex items-center justify-center gap-2 border px-3 text-xs font-semibold tracking-wider uppercase transition-colors active:scale-[0.99]",
+                  activeFiltersCount > 0
+                    ? "border-brass bg-brass/15 text-brass"
+                    : "border-brass-border bg-obsidian-2 text-parchment hover:border-brass-border-strong",
+                )}
+                aria-label="Open filter drawer"
+              >
+                <SlidersHorizontal className="size-3.5" />
+                <span>Filters</span>
+                {activeFiltersCount > 0 && (
+                  <span className="grid size-4.5 place-items-center rounded-full bg-brass text-xs font-bold text-obsidian">
+                    {activeFiltersCount}
+                  </span>
+                )}
+              </button>
+
+              <div className="flex-1 relative">
+                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value as SortKey)}
+                  aria-label="Sort collection"
+                  className="h-11 w-full rounded-none border border-brass-border bg-obsidian-2 px-3 text-xs tracking-wider text-ivory focus:border-brass focus:outline-none"
+                >
+                  <option value="year-asc">Year · Oldest</option>
+                  <option value="year-desc">Year · Newest</option>
+                  <option value="price-asc">Price · Low</option>
+                  <option value="price-desc">Price · High</option>
+                  <option value="name">Name · A–Z</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
       </section >
 
-    {/* MAIN CATALOG CONTENT */ }
-    < main className = "py-8 sm:py-12 lg:py-16" >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Active Filter Chips & Results Count Bar */}
-        <div className="mb-6 sm:mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-brass-border/40 pb-4 sm:pb-5">
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="font-mono text-xs tracking-wider uppercase text-parchment-dim">
-              <span className="font-bold text-brass">{results.length}</span>{" "}
-              {results.length === 1 ? "Piece" : "Pieces"} in view · {firearms.length} in Archive
-            </p>
+      {/* MAIN CATALOG CONTENT */}
+      < main className="py-8 sm:py-12 lg:py-16" >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Active Filter Chips & Results Count Bar */}
+          <div className="mb-6 sm:mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-brass-border/40 pb-4 sm:pb-5">
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="font-mono text-xs tracking-wider uppercase text-parchment-dim">
+                <span className="font-bold text-brass">{results.length}</span>{" "}
+                {results.length === 1 ? "Piece" : "Pieces"} in view · {firearms.length} in Archive
+              </p>
 
-            {/* Active filter badges */}
-            {category && (
-              <FilterChip label={`Category: ${category}`} onRemove={() => setCategory("")} />
-            )}
-            {maker && <FilterChip label={`Maker: ${maker}`} onRemove={() => setMaker("")} />}
-            {caliber && <FilterChip label={`Caliber: ${caliber}`} onRemove={() => setCaliber("")} />}
-            {condition && (
-              <FilterChip label={`Condition: ${condition}`} onRemove={() => setCondition("")} />
-            )}
-            {q && <FilterChip label={`Search: "${q}"`} onRemove={() => setQ("")} />}
-          </div>
-
-          {isFiltered && (
-            <button
-              onClick={resetAll}
-              className="inline-flex items-center gap-1.5 font-mono text-xs tracking-wider uppercase text-brass hover:text-brass-light transition-colors cursor-pointer py-1"
-            >
-              <RotateCcw className="size-3" /> Reset Filters
-            </button>
-          )}
-        </div>
-
-        {/* Firearm Grid */}
-        {results.length > 0 ? (
-          <div
-            data-reveal-group
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-8"
-          >
-            {results.map((f) => (
-              <FirearmCard key={f.id} firearm={f} />
-            ))}
-          </div>
-        ) : (
-          /* Refined Museum Empty State */
-          <div
-            data-reveal
-            className="mx-auto max-w-2xl border border-brass-border/80 bg-obsidian-2/70 p-8 sm:p-14 text-center backdrop-blur-sm"
-          >
-            <div className="mx-auto grid size-12 place-items-center rounded-full border border-brass/40 bg-obsidian text-brass">
-              <SlidersHorizontal className="size-5" />
+              {/* Active filter badges */}
+              {category && (
+                <FilterChip label={`Category: ${category}`} onRemove={() => setCategory("")} />
+              )}
+              {maker && <FilterChip label={`Maker: ${maker}`} onRemove={() => setMaker("")} />}
+              {caliber && <FilterChip label={`Caliber: ${caliber}`} onRemove={() => setCaliber("")} />}
+              {condition && (
+                <FilterChip label={`Condition: ${condition}`} onRemove={() => setCondition("")} />
+              )}
+              {q && <FilterChip label={`Search: "${q}"`} onRemove={() => setQ("")} />}
             </div>
-            <h2 className="mt-5 font-serif text-2xl sm:text-3xl text-ivory">
-              No Archival Records Found
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-parchment-dim">
-              No cataloged pieces match the currently selected criteria. Broaden your search or
-              reset filters to explore the entire archive.
-            </p>
-            <div className="mt-6 sm:mt-8 flex justify-center">
+
+            {isFiltered && (
               <button
                 onClick={resetAll}
-                className="inline-flex items-center gap-2 bg-brass px-6 py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-obsidian transition-colors hover:bg-brass-light cursor-pointer"
+                className="inline-flex items-center gap-1.5 font-mono text-xs tracking-wider uppercase text-brass hover:text-brass-light transition-colors cursor-pointer py-1"
               >
-                <RotateCcw className="size-3.5" /> Reset Archival Filters
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-      </main >
-
-    {/* MOBILE FILTER DRAWER */ }
-  {
-    mobileFilterOpen && (
-      <div className="fixed inset-0 z-50 flex justify-end lg:hidden">
-        {/* Backdrop */}
-        <div
-          className="fixed inset-0 bg-obsidian/80 backdrop-blur-sm transition-opacity"
-          onClick={() => setMobileFilterOpen(false)}
-          aria-hidden="true"
-        />
-
-        {/* Drawer Body */}
-        <aside
-          className="relative z-10 flex h-full w-[min(22rem,90vw)] flex-col border-l border-brass-border bg-elevated px-6 py-6 shadow-2xl overflow-y-auto"
-          aria-label="Filters Drawer"
-        >
-          <div className="flex items-center justify-between border-b border-brass-border/60 pb-4">
-            <div>
-              <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-brass">
-                ARCHIVAL REGISTER
-              </p>
-              <h2 className="mt-1 font-serif text-2xl text-ivory">Filter Archive</h2>
-            </div>
-            <button
-              onClick={() => setMobileFilterOpen(false)}
-              className="flex size-10 items-center justify-center border border-brass-border text-parchment hover:text-ivory cursor-pointer"
-              aria-label="Close filters"
-            >
-              <X className="size-5" />
-            </button>
-          </div>
-
-          <div className="mt-6 flex flex-col gap-6 flex-1">
-            <MobileFilterSection
-              title="Category"
-              selected={category}
-              options={categories}
-              onSelect={(val) => setCategory(category === val ? "" : val)}
-            />
-            <MobileFilterSection
-              title="Maker"
-              selected={maker}
-              options={makers}
-              onSelect={(val) => setMaker(maker === val ? "" : val)}
-            />
-            <MobileFilterSection
-              title="Caliber"
-              selected={caliber}
-              options={calibers}
-              onSelect={(val) => setCaliber(caliber === val ? "" : val)}
-            />
-            <MobileFilterSection
-              title="Condition"
-              selected={condition}
-              options={conditions}
-              onSelect={(val) => setCondition(condition === val ? "" : val)}
-            />
-          </div>
-
-          {/* Drawer Actions */}
-          <div className="mt-8 border-t border-brass-border/60 pt-6 flex flex-col gap-3">
-            {activeFiltersCount > 0 && (
-              <button
-                onClick={() => {
-                  setCategory("");
-                  setMaker("");
-                  setCaliber("");
-                  setCondition("");
-                }}
-                className="w-full border border-brass-border py-3 font-mono text-xs tracking-[0.2em] uppercase text-parchment-dim hover:text-ivory cursor-pointer"
-              >
-                Clear Selection
+                <RotateCcw className="size-3" /> Reset Filters
               </button>
             )}
-            <button
-              onClick={() => setMobileFilterOpen(false)}
-              className="w-full bg-brass py-3.5 font-sans text-xs font-semibold tracking-[0.2em] uppercase text-obsidian hover:bg-brass-light transition-colors cursor-pointer"
-            >
-              View {results.length} {results.length === 1 ? "Piece" : "Pieces"}
-            </button>
           </div>
-        </aside>
-      </div>
-    )
-  }
+
+          {/* Firearm Grid */}
+          {loading && firearms.length === 0 ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-8">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <FirearmCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : results.length > 0 ? (
+            <div
+              data-reveal-group
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-8 is-revealed"
+            >
+              {results.map((f) => (
+                <FirearmCard key={f.id} firearm={f} />
+              ))}
+            </div>
+          ) : (
+            /* Refined Museum Empty State */
+            <div
+              data-reveal
+              className="mx-auto max-w-2xl border border-brass-border/80 bg-obsidian-2/70 p-8 sm:p-14 text-center backdrop-blur-sm"
+            >
+              <div className="mx-auto grid size-12 place-items-center rounded-full border border-brass/40 bg-obsidian text-brass">
+                <SlidersHorizontal className="size-5" />
+              </div>
+              <h2 className="mt-5 font-serif text-2xl sm:text-3xl text-ivory">
+                No Archival Records Found
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-parchment-dim">
+                No cataloged pieces match the currently selected criteria. Broaden your search or
+                reset filters to explore the entire archive.
+              </p>
+              <div className="mt-6 sm:mt-8 flex justify-center">
+                <button
+                  onClick={resetAll}
+                  className="inline-flex items-center gap-2 bg-brass px-6 py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-obsidian transition-colors hover:bg-brass-light cursor-pointer"
+                >
+                  <RotateCcw className="size-3.5" /> Reset Archival Filters
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </main >
+
+      {/* MOBILE FILTER DRAWER */}
+      {
+        mobileFilterOpen && (
+          <div className="fixed inset-0 z-50 flex justify-end lg:hidden">
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 bg-obsidian/80 backdrop-blur-sm transition-opacity"
+              onClick={() => setMobileFilterOpen(false)}
+              aria-hidden="true"
+            />
+
+            {/* Drawer Body */}
+            <aside
+              className="relative z-10 flex h-full w-[min(22rem,90vw)] flex-col border-l border-brass-border bg-elevated px-6 py-6 shadow-2xl overflow-y-auto"
+              aria-label="Filters Drawer"
+            >
+              <div className="flex items-center justify-between border-b border-brass-border/60 pb-4">
+                <div>
+                  <p className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-brass">
+                    ARCHIVAL REGISTER
+                  </p>
+                  <h2 className="mt-1 font-serif text-2xl text-ivory">Filter Archive</h2>
+                </div>
+                <button
+                  onClick={() => setMobileFilterOpen(false)}
+                  className="flex size-10 items-center justify-center border border-brass-border text-parchment hover:text-ivory cursor-pointer"
+                  aria-label="Close filters"
+                >
+                  <X className="size-5" />
+                </button>
+              </div>
+
+              <div className="mt-6 flex flex-col gap-6 flex-1">
+                <MobileFilterSection
+                  title="Category"
+                  selected={category}
+                  options={categories}
+                  onSelect={(val) => setCategory(category === val ? "" : val)}
+                />
+                <MobileFilterSection
+                  title="Maker"
+                  selected={maker}
+                  options={makers}
+                  onSelect={(val) => setMaker(maker === val ? "" : val)}
+                />
+                <MobileFilterSection
+                  title="Caliber"
+                  selected={caliber}
+                  options={calibers}
+                  onSelect={(val) => setCaliber(caliber === val ? "" : val)}
+                />
+                <MobileFilterSection
+                  title="Condition"
+                  selected={condition}
+                  options={conditions}
+                  onSelect={(val) => setCondition(condition === val ? "" : val)}
+                />
+              </div>
+
+              {/* Drawer Actions */}
+              <div className="mt-8 border-t border-brass-border/60 pt-6 flex flex-col gap-3">
+                {activeFiltersCount > 0 && (
+                  <button
+                    onClick={() => {
+                      setCategory("");
+                      setMaker("");
+                      setCaliber("");
+                      setCondition("");
+                    }}
+                    className="w-full border border-brass-border py-3 font-mono text-xs tracking-[0.2em] uppercase text-parchment-dim hover:text-ivory cursor-pointer"
+                  >
+                    Clear Selection
+                  </button>
+                )}
+                <button
+                  onClick={() => setMobileFilterOpen(false)}
+                  className="w-full bg-brass py-3.5 font-sans text-xs font-semibold tracking-[0.2em] uppercase text-obsidian hover:bg-brass-light transition-colors cursor-pointer"
+                >
+                  View {results.length} {results.length === 1 ? "Piece" : "Pieces"}
+                </button>
+              </div>
+            </aside>
+          </div>
+        )
+      }
     </div >
   );
 }

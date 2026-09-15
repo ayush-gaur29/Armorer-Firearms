@@ -23,6 +23,7 @@ interface CartContextType {
   setIsCheckoutOpen: (open: boolean) => void;
   openCheckout: () => void;
   closeCheckout: () => void;
+  isLoaded: boolean;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -30,26 +31,37 @@ const CartContext = createContext<CartContextType | null>(null);
 const STORAGE_KEY = "armorer_cart_v1";
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
-  // Synchronize to localStorage
+  // Load from localStorage only on client after mount to prevent SSR hydration mismatch
   useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setItems(parsed);
+        }
+      }
+    } catch {
+      // ignore storage or JSON parse errors
+    } finally {
+      setIsLoaded(true);
+    }
+  }, []);
+
+  // Synchronize to localStorage only after initial client load is complete
+  useEffect(() => {
+    if (!isLoaded) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
     } catch {
       // ignore storage errors
     }
-  }, [items]);
+  }, [items, isLoaded]);
 
   const isInCart = (id: string) => items.some((item) => item.firearm.id === id);
 
@@ -124,6 +136,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setIsCheckoutOpen,
         openCheckout,
         closeCheckout,
+        isLoaded,
       }}
     >
       {children}

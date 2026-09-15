@@ -379,3 +379,59 @@
     box-shadow: 0 0 0 1px var(--brass), 0 0 24px -6px var(--brass);
   }
 }
+
+/* Printable Archival Invoice Rules */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #invoice-printable,
+  #invoice-printable * {
+    visibility: visible;
+  }
+
+  #invoice-printable {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 24px;
+    background: #ffffff !important;
+    color: #111111 !important;
+    border: 1px solid #cccccc !important;
+    box-shadow: none !important;
+  }
+
+  #invoice-printable .text-ivory,
+  #invoice-printable .text-parchment,
+  #invoice-printable .text-parchment-dim,
+  #invoice-printable .text-brass {
+    color: #111111 !important;
+  }
+
+  #invoice-printable .bg-obsidian,
+  #invoice-printable .bg-obsidian-2,
+  #invoice-printable .bg-obsidian-3,
+  #invoice-printable .bg-\[\#15171B\],
+  #invoice-printable .bg-elevated {
+    background: #ffffff !important;
+  }
+
+  #invoice-printable .border-brass-border,
+  #invoice-printable .border-brass-border\/60,
+  #invoice-printable .border-brass-border\/70,
+  #invoice-printable .border-brass-border\/40 {
+    border-color: #e5e5e5 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

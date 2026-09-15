@@ -4,7 +4,6 @@ import {
   accessionNo,
   FALLBACK_ABOUT,
   FALLBACK_CONTACT,
-  FALLBACK_FIREARMS,
   FALLBACK_HERO,
   FALLBACK_INTRO,
   PLACEHOLDER_IMAGE,
@@ -21,10 +20,15 @@ interface AnyDoc {
   id?: any;
   images?: any;
   image?: any;
+  imageUrl?: any;
+  photos?: any;
+  photo?: any;
   name?: any;
+  manufacturer?: any;
   maker?: any;
   model?: any;
   caliber?: any;
+  circa?: any;
   year?: any;
   price?: any;
   description?: any;
@@ -41,7 +45,6 @@ interface AnyDoc {
   heading?: any;
   subtitle?: any;
   text?: any;
-  imageUrl?: any;
   backgroundImage?: any;
   logoUrl?: any;
   ctaPrimary?: any;
@@ -75,48 +78,48 @@ function replaceAtelier(val: any): any {
 }
 
 function normalizeFirearm(id: string, d: AnyDoc): Firearm {
-  const localMatch = FALLBACK_FIREARMS.find(
-    (f) =>
-      f.id === id ||
-      accessionNo(f.id) === accessionNo(id) ||
-      f.name.toLowerCase().includes(String(d.name ?? "").toLowerCase()) ||
-      String(d.name ?? "").toLowerCase().includes(f.name.toLowerCase()),
-  );
+  // Aggregate all remote images from Firestore document fields (images, photos, photoUrls, gallery, image, imageUrl, photo)
+  const collected: string[] = [];
+  const addCandidates = (val: any) => {
+    if (!val) return;
+    if (Array.isArray(val)) {
+      for (const item of val) {
+        if (typeof item === "string" && item.trim().length > 0) {
+          collected.push(item.trim());
+        }
+      }
+    } else if (typeof val === "string" && val.trim().length > 0) {
+      collected.push(val.trim());
+    }
+  };
+  addCandidates(d.images);
+  addCandidates(d.photos);
+  addCandidates(d.photoUrls);
+  addCandidates(d.gallery);
+  addCandidates(d.image);
+  addCandidates(d.imageUrl);
+  addCandidates(d.photo);
+  const remoteImages = Array.from(new Set(collected));
 
-  // Authoritative images: The newly configured museum photography from localMatch
-  // takes strict precedence over stale remote Firestore image URLs.
-  // This completely eliminates the 1-second image blink/swap when Firestore data resolves.
-  const rawImages = d.images;
-  const remoteImages = Array.isArray(rawImages)
-    ? rawImages.filter((x): x is string => typeof x === "string" && x.length > 0)
-    : typeof d.image === "string"
-      ? [d.image]
-      : [];
-
-  const authoritativeImages =
-    localMatch?.images && localMatch.images.length > 0
-      ? localMatch.images
-      : remoteImages.length > 0
-        ? remoteImages
-        : [PLACEHOLDER_IMAGE];
+  const images = remoteImages.length > 0 ? remoteImages : [PLACEHOLDER_IMAGE];
 
   return {
-    id,
-    name: replaceAtelier(String(d.name ?? localMatch?.name ?? "Untitled Piece")),
-    maker: String(d.maker ?? localMatch?.maker ?? ""),
-    model: String(d.model ?? localMatch?.model ?? ""),
-    caliber: String(d.caliber ?? localMatch?.caliber ?? ""),
-    year: (d.year as number | string) ?? localMatch?.year ?? "",
-    price: (d.price as number | string | undefined) ?? localMatch?.price,
-    description: replaceAtelier(String(d.description ?? localMatch?.description ?? "")),
-    history: replaceAtelier(d.history ? String(d.history) : d.provenance ? String(d.provenance) : localMatch?.history),
-    condition: String(d.condition ?? localMatch?.condition ?? ""),
-    category: String(d.category ?? localMatch?.category ?? "Uncategorized"),
-    status: d.status ? String(d.status) : localMatch?.status,
-    images: authoritativeImages,
-    featured: Boolean(d.featured ?? localMatch?.featured),
-    serial: d.serial ? String(d.serial) : localMatch?.serial,
-    notes: d.notes ? String(d.notes) : localMatch?.notes,
+    id: id || String(d.id ?? ""),
+    name: replaceAtelier(String(d.name ?? "Untitled Piece")),
+    maker: String(d.manufacturer ?? d.maker ?? ""),
+    model: String(d.model ?? ""),
+    caliber: String(d.caliber ?? ""),
+    year: (d.circa as number | string) ?? (d.year as number | string) ?? "",
+    price: (d.price as number | string | undefined),
+    description: replaceAtelier(String(d.description ?? "")),
+    history: replaceAtelier(d.history ? String(d.history) : d.provenance ? String(d.provenance) : ""),
+    condition: String(d.condition ?? ""),
+    category: String(d.category ?? "Uncategorized"),
+    status: d.status ? String(d.status) : undefined,
+    images,
+    featured: Boolean(d.featured ?? false),
+    serial: d.serial ? String(d.serial) : undefined,
+    notes: d.notes ? String(d.notes) : undefined,
   };
 }
 
@@ -189,19 +192,82 @@ export const useAboutContent = () => useSiteDoc<AboutContent>("about", FALLBACK_
 export const useContactContent = () => useSiteDoc<ContactContent>("contact", FALLBACK_CONTACT);
 
 export function useFirearms() {
-  return { firearms: FALLBACK_FIREARMS, live: false };
+  const [firearms, setFirearms] = useState<Firearm[]>([]);
+  const [live, setLive] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let unsub = () => { };
+    let cancelled = false;
+
+    Promise.all([getDb(), import("firebase/firestore")])
+      .then(([db, fs]) => {
+        if (cancelled) return;
+        unsub = fs.onSnapshot(
+          fs.collection(db, "firearms"),
+          (snap) => {
+            if (snap.empty) {
+              setLoading(false);
+              return;
+            }
+            const items = snap.docs.map((s) => normalizeFirearm(s.id, s.data() as AnyDoc));
+            setFirearms(items);
+            setLive(true);
+            setLoading(false);
+          },
+          (err) => {
+            console.error("Firestore firearms snapshot error:", err);
+            setLoading(false);
+          },
+        );
+      })
+      .catch((err) => {
+        console.error("Firestore connection error:", err);
+        setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+      unsub();
+    };
+  }, []);
+
+  return { firearms, live, loading };
 }
 
 export function useFirearm(id: string) {
-  const [firearm, setFirearm] = useState<Firearm | null | undefined>(
-    () => FALLBACK_FIREARMS.find((f) => f.id === id || accessionNo(f.id) === accessionNo(id)) ?? undefined,
-  );
-  const [loading, setLoading] = useState(false);
+  const [firearm, setFirearm] = useState<Firearm | null | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const item = FALLBACK_FIREARMS.find((f) => f.id === id || accessionNo(f.id) === accessionNo(id));
-    setFirearm(item ?? null);
-    setLoading(false);
+    let unsub = () => { };
+    let cancelled = false;
+
+    Promise.all([getDb(), import("firebase/firestore")])
+      .then(([db, fs]) => {
+        if (cancelled) return;
+        unsub = fs.onSnapshot(
+          fs.doc(db, "firearms", id),
+          (snap) => {
+            if (snap.exists()) {
+              setFirearm(normalizeFirearm(snap.id, snap.data() as AnyDoc));
+            } else {
+              setFirearm(null);
+            }
+            setLoading(false);
+          },
+          (err) => {
+            console.error("Firestore firearm doc error:", err);
+            setLoading(false);
+          },
+        );
+      })
+      .catch(() => setLoading(false));
+
+    return () => {
+      cancelled = true;
+      unsub();
+    };
   }, [id]);
 
   return { firearm, loading };
@@ -218,10 +284,22 @@ export interface InquiryInput {
 
 export async function submitInquiry(input: InquiryInput) {
   const [db, fs] = await Promise.all([getDb(), import("firebase/firestore")]);
-  await fs.addDoc(fs.collection(db, "inquiries"), {
-    ...input,
+
+  // Firestore rejects `undefined` field values — only include fields that are
+  // actually defined so optional fields (firearmId, phone, firearmInterest)
+  // don't cause a "Unsupported field value: undefined" error.
+  const payload: Record<string, unknown> = {
+    name: input.name,
+    email: input.email,
+    message: input.message,
     status: "new",
     timestamp: fs.serverTimestamp(),
     createdAt: new Date().toISOString(),
-  });
+  };
+  if (input.phone) payload.phone = input.phone;
+  if (input.firearmInterest) payload.firearmInterest = input.firearmInterest;
+  if (input.firearmId) payload.firearmId = input.firearmId;
+
+  await fs.addDoc(fs.collection(db, "inquirys"), payload);
 }
+

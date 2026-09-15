@@ -42,10 +42,7 @@ export function CartDrawer() {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-brass-border/70 px-6 py-5">
           <div>
-            <p className="font-mono text-xs font-medium tracking-[0.24em] uppercase text-brass">
-              ACQUISITION DOCKET
-            </p>
-            <h2 className="mt-0.5 font-serif text-2xl text-ivory">
+            <h2 className="font-serif text-2xl text-ivory">
               Your Cart ({items.length})
             </h2>
           </div>
@@ -99,7 +96,7 @@ export function CartDrawer() {
                     <div>
                       <div className="flex items-start justify-between gap-2">
                         <span className="font-mono text-[0.65rem] tracking-wider uppercase text-brass truncate">
-                          {accessionNo(firearm.id)}
+                          Item # {accessionNo(firearm.id)}
                         </span>
                         <button
                           onClick={() => removeItem(firearm.id)}
@@ -143,7 +140,7 @@ export function CartDrawer() {
           <div className="border-t border-brass-border/80 bg-obsidian px-6 py-5 space-y-4">
             <div className="flex items-baseline justify-between">
               <span className="font-mono text-xs uppercase tracking-[0.2em] text-parchment-dim">
-                Acquisition Subtotal
+                Cart Subtotal
               </span>
               <span className="font-serif text-2xl font-normal text-brass">
                 {formatPrice(totalPrice)}

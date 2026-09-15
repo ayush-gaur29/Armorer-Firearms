@@ -13,9 +13,16 @@ const NAV = [
 ] as const;
 
 export function Header() {
-  const { openCart, itemCount } = useCart();
+  const { openCart, itemCount, isLoaded } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const displayCount = mounted && isLoaded ? itemCount : 0;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -73,14 +80,15 @@ export function Header() {
           {/* Acquisition Cart */}
           <button
             onClick={openCart}
+            suppressHydrationWarning
             className="group relative flex items-center gap-2 border border-brass-border/60 bg-obsidian-2/80 px-3.5 py-1.5 font-mono text-xs tracking-wider uppercase text-parchment transition-all hover:border-brass hover:text-brass cursor-pointer"
-            aria-label={`View acquisition cart (${itemCount} pieces)`}
+            aria-label={`View acquisition cart (${displayCount} pieces)`}
           >
             <ShoppingBag className="size-3.5 text-brass" />
             <span className="text-[0.72rem]">Cart</span>
-            {itemCount > 0 && (
+            {displayCount > 0 && (
               <span className="grid size-4 place-items-center rounded-full bg-brass font-sans text-[0.65rem] font-bold text-obsidian">
-                {itemCount}
+                {displayCount}
               </span>
             )}
           </button>
@@ -90,13 +98,14 @@ export function Header() {
         <div className="flex items-center gap-2 lg:hidden">
           <button
             onClick={openCart}
+            suppressHydrationWarning
             className="relative flex size-10 items-center justify-center text-ivory hover:text-brass transition-colors cursor-pointer"
-            aria-label={`View acquisition cart (${itemCount} pieces)`}
+            aria-label={`View acquisition cart (${displayCount} pieces)`}
           >
             <ShoppingBag className="size-5" />
-            {itemCount > 0 && (
+            {displayCount > 0 && (
               <span className="absolute top-1 right-1 grid size-4 place-items-center rounded-full bg-brass font-sans text-[0.6rem] font-bold text-obsidian">
-                {itemCount}
+                {displayCount}
               </span>
             )}
           </button>

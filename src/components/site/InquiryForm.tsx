@@ -1,9 +1,150 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
-import { submitInquiry } from "@/hooks/useArchive";
+import { ArrowRight, CheckCircle2, AlertCircle, ChevronDown, Sparkles } from "lucide-react";
+import { submitInquiry, useFirearms } from "@/hooks/useArchive";
 import { cn } from "@/lib/utils";
+
+// ─── Dynamic Firearm Combobox ────────────────────────────────────────────────
+
+function FirearmCombobox({
+  value,
+  onChange,
+  readOnly,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  readOnly?: boolean;
+}) {
+  const { firearms } = useFirearms();
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState(value);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setQuery(value);
+  }, [value]);
+
+  useEffect(() => {
+    function handleOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
+  }, []);
+
+  const available = firearms.filter((f) => !f.status || f.status === "available");
+
+  const filtered = query.trim()
+    ? available.filter(
+        (f) =>
+          f.name.toLowerCase().includes(query.toLowerCase()) ||
+          (f.category ?? "").toLowerCase().includes(query.toLowerCase()) ||
+          (f.caliber ?? "").toLowerCase().includes(query.toLowerCase()),
+      )
+    : available;
+
+  function select(name: string) {
+    setQuery(name);
+    onChange(name);
+    setOpen(false);
+  }
+
+  function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
+    setQuery(e.target.value);
+    onChange(e.target.value);
+    setOpen(true);
+  }
+
+  const inputClass =
+    "w-full rounded-none border border-brass-border/70 bg-obsidian-2/90 px-4 py-3 pr-10 text-sm text-ivory placeholder:text-parchment-dim/40 transition-colors focus:border-brass focus:outline-none focus:ring-1 focus:ring-brass read-only:opacity-75";
+
+  if (readOnly) {
+    return <input className={inputClass} value={value} readOnly />;
+  }
+
+  return (
+    <div ref={containerRef} className="relative">
+      <input
+        className={inputClass}
+        value={query}
+        onChange={handleInput}
+        onFocus={() => setOpen(true)}
+        placeholder="Optional — e.g. Colt Single Action Army"
+        autoComplete="off"
+      />
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => setOpen((o) => !o)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-parchment-dim/50 hover:text-brass transition-colors"
+        aria-label="Toggle firearm list"
+      >
+        <ChevronDown
+          className={cn("size-4 transition-transform duration-200", open && "rotate-180")}
+        />
+      </button>
+
+      {open && (
+        <div className="absolute left-0 right-0 top-full z-50 border border-brass-border/60 bg-[#1a1710] shadow-2xl shadow-black/60 max-h-72 overflow-y-auto">
+          <div className="flex items-center justify-between border-b border-brass-border/40 px-4 py-2.5">
+            <span className="flex items-center gap-1.5 font-mono text-[0.6rem] tracking-[0.2em] uppercase text-brass">
+              <Sparkles className="size-3" />
+              Armorer Collection
+            </span>
+            {available.length > 0 && (
+              <span className="font-mono text-[0.6rem] tracking-[0.16em] uppercase text-parchment-dim/60">
+                {available.length} piece{available.length !== 1 ? "s" : ""} available
+              </span>
+            )}
+          </div>
+
+          {filtered.length === 0 ? (
+            <div className="px-4 py-4 text-sm text-parchment-dim/60 italic">
+              No matching pieces — your custom text will be sent as-is.
+            </div>
+          ) : (
+            filtered.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => select(f.name)}
+                className="w-full text-left px-4 py-3 border-b border-brass-border/20 last:border-0 hover:bg-brass/10 transition-colors group"
+              >
+                <p className="text-sm text-ivory group-hover:text-brass transition-colors font-medium leading-snug">
+                  {f.name}
+                </p>
+                <div className="mt-0.5 flex items-center gap-2 font-mono text-[0.6rem] tracking-[0.14em] uppercase text-parchment-dim/50">
+                  {f.category && <span>{f.category}</span>}
+                  {f.caliber && (
+                    <>
+                      <span className="text-brass/30">·</span>
+                      <span>{f.caliber}</span>
+                    </>
+                  )}
+                  {f.year && (
+                    <>
+                      <span className="text-brass/30">·</span>
+                      <span>Circa {f.year}</span>
+                    </>
+                  )}
+                </div>
+              </button>
+            ))
+          )}
+
+          <div className="border-t border-brass-border/30 px-4 py-2">
+            <p className="font-mono text-[0.58rem] tracking-[0.12em] text-parchment-dim/40 uppercase">
+              Type to search collection, select an item, or enter a custom request.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 const schema = z.object({
   name: z.string().trim().min(2, "Please enter your full name."),
@@ -56,7 +197,8 @@ export function InquiryForm({
       setSent(true);
       toast.success("Your inquiry has been received. A curator will respond shortly.");
       onDone?.();
-    } catch {
+    } catch (err) {
+      console.error("[InquiryForm] submitInquiry failed:", err);
       toast.error("We could not send your inquiry. Please try again or telephone the armory.");
     } finally {
       setBusy(false);
@@ -114,12 +256,10 @@ export function InquiryForm({
         />
       </Field>
 
-      <Field label="Piece of Interest" error={errors.firearmInterest}>
-        <input
-          className="w-full rounded-none border border-brass-border/70 bg-obsidian-2/90 px-4 py-3 text-sm text-ivory placeholder:text-parchment-dim/40 transition-colors focus:border-brass focus:outline-none focus:ring-1 focus:ring-brass read-only:opacity-75"
+      <Field label="Firearm of Interest" error={errors.firearmInterest}>
+        <FirearmCombobox
           value={values.firearmInterest}
-          onChange={set("firearmInterest")}
-          placeholder="e.g. Winchester Model 1873, or 'General Inquiry'"
+          onChange={(val) => setValues((v) => ({ ...v, firearmInterest: val }))}
           readOnly={Boolean(firearmName)}
         />
       </Field>

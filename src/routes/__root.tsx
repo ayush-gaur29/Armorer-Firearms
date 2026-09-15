@@ -114,15 +114,42 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+// Silence browser extension hydration warnings (e.g. Bitwarden, LastPass, ColorZilla injecting bis_skin_checked)
+if (typeof window !== "undefined") {
+  const origError = console.error;
+  console.error = (...args: unknown[]) => {
+    const isExtensionHydrationWarning = args.some(
+      (arg) =>
+        typeof arg === "string" &&
+        (arg.includes("bis_skin_checked") ||
+          arg.includes("bis_register") ||
+          arg.includes("__processed_") ||
+          arg.includes("cz-shortcut-listen")),
+    );
+    if (isExtensionHydrationWarning) return;
+    origError.apply(console, args);
+  };
+}
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <title>Armorer Firearms</title>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var c=function(){try{var els=document.querySelectorAll('[bis_skin_checked],[bis_register],[cz-shortcut-listen]');for(var i=0;i<els.length;i++){els[i].removeAttribute('bis_skin_checked');els[i].removeAttribute('bis_register');els[i].removeAttribute('cz-shortcut-listen');}}catch(e){}};c();if(typeof MutationObserver!=='undefined'&&document.documentElement){var o=new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var m=ms[i];if(m.type==='attributes'&&m.attributeName&&(m.attributeName.indexOf('bis_')===0||m.attributeName.indexOf('__processed_')===0)){m.target.removeAttribute(m.attributeName);}}});o.observe(document.documentElement,{attributes:true,subtree:true});window.addEventListener('load',function(){c();setTimeout(function(){o.disconnect();},3000);});}})();`,
+          }}
+        />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         {children}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var els=document.querySelectorAll('[bis_skin_checked],[bis_register],[cz-shortcut-listen]');for(var i=0;i<els.length;i++){els[i].removeAttribute('bis_skin_checked');els[i].removeAttribute('bis_register');els[i].removeAttribute('cz-shortcut-listen');}}catch(e){}})();`,
+          }}
+        />
         <Scripts />
       </body>
     </html>

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { accessionNo, formatPrice, PLACEHOLDER_IMAGE, type Firearm } from "@/lib/fallbacks";
+import { formatPrice, accessionNo, PLACEHOLDER_IMAGE, type Firearm } from "@/lib/fallbacks";
 import { cn } from "@/lib/utils";
 
 export function ArchiveImage({
@@ -76,10 +76,8 @@ export function FirearmCard({ firearm }: { firearm: Firearm }) {
         />
         {/* Subtle border vignette for depth */}
         <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_15px_rgba(0,0,0,0.06)]" />
-
-        {/* Accession tag */}
-        <span className="absolute top-2.5 left-2.5 border border-brass-border/60 bg-obsidian/95 px-2.5 py-1 font-mono text-[0.62rem] sm:text-xs tracking-[0.16em] text-brass backdrop-blur-md shadow-sm">
-          ACCESSION NO. {accessionNo(firearm.id)}
+        <span className="absolute top-3 left-3 border border-brass-border/50 bg-obsidian/90 px-2 py-0.5 font-mono text-[0.62rem] tracking-[0.16em] text-brass backdrop-blur-md">
+          Item # {accessionNo(firearm.id)}
         </span>
       </div>
 
