@@ -1,4 +1,4 @@
-# Obsidian Archive
+# Armorer Firearms
 
 Build the redesigned Armorer Firearms website: a high-end private collection and museum archive experience with an Obsidian & Brass aesthetic inspired by the provided reference, completely preserving the real Firebase / Firestore dynamic integrations and routes from the live application.
 

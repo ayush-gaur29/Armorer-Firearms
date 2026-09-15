@@ -43,83 +43,85 @@ export function Header() {
   }, [open]);
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-40 transition-all duration-300",
-        scrolled
-          ? "border-b border-brass-border/60 bg-background/90 backdrop-blur-md shadow-vault py-1"
-          : "bg-gradient-to-b from-obsidian/85 via-obsidian/45 to-transparent py-2",
-      )}
-    >
-      <div className="mx-auto flex h-16 sm:h-18 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link
-          to="/"
-          className="flex min-w-0 items-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass"
-          onClick={() => setOpen(false)}
-          aria-label="Armorer Firearms Home"
-        >
-          <BrandMark />
-        </Link>
-
-        {/* Desktop nav + cart */}
-        <div className="hidden items-center gap-7 lg:flex">
-          <nav className="flex items-center gap-7" aria-label="Primary">
-            {NAV.map((item) => (
-              <Link
-                key={item.label}
-                to={item.to}
-                activeOptions={{ exact: item.to === "/" }}
-                className="text-[0.75rem] tracking-[0.22em] uppercase font-medium text-ivory transition-colors hover:text-brass [text-shadow:0_1px_4px_rgba(0,0,0,0.6)] light:[text-shadow:none] py-1"
-                activeProps={{ className: "!text-brass font-semibold" }}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Acquisition Cart */}
-          <button
-            onClick={openCart}
-            suppressHydrationWarning
-            className="group relative flex items-center gap-2 border border-brass-border/60 bg-obsidian-2/80 px-3.5 py-1.5 font-mono text-xs tracking-wider uppercase text-parchment transition-all hover:border-brass hover:text-brass cursor-pointer"
-            aria-label={`View acquisition cart (${displayCount} pieces)`}
+    <>
+      <header
+        className={cn(
+          "fixed inset-x-0 top-0 z-40 transition-all duration-300",
+          scrolled
+            ? "border-b border-brass-border/60 bg-background/90 backdrop-blur-md shadow-vault py-1"
+            : "bg-gradient-to-b from-obsidian/85 via-obsidian/45 to-transparent py-2",
+        )}
+      >
+        <div className="mx-auto flex h-16 sm:h-18 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+          <Link
+            to="/"
+            className="flex min-w-0 items-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass"
+            onClick={() => setOpen(false)}
+            aria-label="Armorer Firearms Home"
           >
-            <ShoppingBag className="size-3.5 text-brass" />
-            <span className="text-[0.72rem]">Cart</span>
-            {displayCount > 0 && (
-              <span className="grid size-4 place-items-center rounded-full bg-brass font-sans text-[0.65rem] font-bold text-obsidian">
-                {displayCount}
-              </span>
-            )}
-          </button>
+            <BrandMark />
+          </Link>
+
+          {/* Desktop nav + cart */}
+          <div className="hidden items-center gap-7 lg:flex">
+            <nav className="flex items-center gap-7" aria-label="Primary">
+              {NAV.map((item) => (
+                <Link
+                  key={item.label}
+                  to={item.to}
+                  activeOptions={{ exact: item.to === "/" }}
+                  className="text-[0.75rem] tracking-[0.22em] uppercase font-medium text-ivory transition-colors hover:text-brass [text-shadow:0_1px_4px_rgba(0,0,0,0.6)] light:[text-shadow:none] py-1"
+                  activeProps={{ className: "!text-brass font-semibold" }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Acquisition Cart */}
+            <button
+              onClick={openCart}
+              suppressHydrationWarning
+              className="group relative flex items-center gap-2 border border-brass-border/60 bg-obsidian-2/80 px-3.5 py-1.5 font-mono text-xs tracking-wider uppercase text-parchment transition-all hover:border-brass hover:text-brass cursor-pointer"
+              aria-label={`View acquisition cart (${displayCount} pieces)`}
+            >
+              <ShoppingBag className="size-3.5 text-brass" />
+              <span className="text-[0.72rem]">Cart</span>
+              {displayCount > 0 && (
+                <span className="grid size-4 place-items-center rounded-full bg-brass font-sans text-[0.65rem] font-bold text-obsidian">
+                  {displayCount}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* Mobile controls */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <button
+              onClick={openCart}
+              suppressHydrationWarning
+              className="relative flex size-10 items-center justify-center text-ivory hover:text-brass transition-colors cursor-pointer"
+              aria-label={`View acquisition cart (${displayCount} pieces)`}
+            >
+              <ShoppingBag className="size-5" />
+              {displayCount > 0 && (
+                <span className="absolute top-1 right-1 grid size-4 place-items-center rounded-full bg-brass font-sans text-[0.6rem] font-bold text-obsidian">
+                  {displayCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              className="flex size-11 shrink-0 items-center justify-center -mr-2 text-ivory hover:text-brass cursor-pointer transition-colors active:scale-95"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              onClick={() => setOpen((o) => !o)}
+            >
+              {open ? <X className="size-6" /> : <Menu className="size-6" />}
+            </button>
+          </div>
         </div>
-
-        {/* Mobile controls */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <button
-            onClick={openCart}
-            suppressHydrationWarning
-            className="relative flex size-10 items-center justify-center text-ivory hover:text-brass transition-colors cursor-pointer"
-            aria-label={`View acquisition cart (${displayCount} pieces)`}
-          >
-            <ShoppingBag className="size-5" />
-            {displayCount > 0 && (
-              <span className="absolute top-1 right-1 grid size-4 place-items-center rounded-full bg-brass font-sans text-[0.6rem] font-bold text-obsidian">
-                {displayCount}
-              </span>
-            )}
-          </button>
-
-          <button
-            className="flex size-11 shrink-0 items-center justify-center -mr-2 text-ivory hover:text-brass cursor-pointer transition-colors active:scale-95"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            onClick={() => setOpen((o) => !o)}
-          >
-            {open ? <X className="size-6" /> : <Menu className="size-6" />}
-          </button>
-        </div>
-      </div>
+      </header>
 
       {/* Mobile drawer */}
       <div
@@ -165,6 +167,7 @@ export function Header() {
           A Private Archive of Historic Arms
         </p>
       </aside>
-    </header>
+    </>
   );
 }
+

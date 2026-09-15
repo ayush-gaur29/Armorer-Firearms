@@ -2,8 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { useHero, useAboutContent } from "@/hooks/useArchive";
 import { ArchiveImage } from "@/components/site/FirearmCard";
-import coverVideo from "@/assets/cover_video.mp4";
-import heroImg from "@/assets/hero-vault.jpg";
+import coverPic from "@/assets/cover_pic.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,24 +25,12 @@ function HomePage() {
       {/* HERO */}
       <section className="relative isolate flex flex-col justify-start sm:flex-row sm:min-h-[100svh] sm:items-end overflow-hidden bg-obsidian">
         <div className="relative w-full aspect-[16/9] mt-16 sm:mt-0 sm:aspect-auto sm:absolute sm:inset-0 sm:-z-10 overflow-hidden bg-obsidian">
-          {/* Static poster fallback underneath to prevent black flash */}
+          {/* Static Hero Cover Image */}
           <img
-            src={hero.imageUrl || heroImg}
-            alt=""
+            src={coverPic}
+            alt="Armorer Firearms"
             aria-hidden="true"
-            className="hero-poster absolute inset-0 h-full w-full object-contain sm:object-cover sm:object-[center_35%] brightness-[1.12] contrast-[1.04]"
-          />
-          {/* Background Video */}
-          <video
-            src={coverVideo}
-            poster={hero.imageUrl || heroImg}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            aria-hidden="true"
-            className="hero-video absolute inset-0 h-full w-full object-contain sm:object-cover sm:object-[center_35%] brightness-[1.14] contrast-[1.04] saturate-[1.04]"
+            className="hero-cover absolute inset-0 h-full w-full object-contain sm:object-cover sm:object-[center_35%] brightness-[1.05] contrast-[1.02]"
           />
           {/* Subtle directional vignettes for text readability while leaving video clear & vivid */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-12 sm:h-32 bg-gradient-to-b from-obsidian/70 via-transparent to-transparent" />
@@ -60,37 +47,26 @@ function HomePage() {
             }}
           />
         </div>
-        <div className="mx-auto w-full max-w-7xl px-4 pt-3 pb-6 sm:px-6 sm:pt-32 sm:pb-8 lg:px-8 lg:pt-36 lg:pb-10">
-          <div className="max-w-2xl sm:-translate-x-2 md:-translate-x-3 lg:-translate-x-5 xl:-translate-x-7">
-            <h1 className="hero-enter-heading font-serif text-[clamp(1.75rem,5.5vw,3.35rem)] font-normal leading-[1.12] tracking-tight text-ivory drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
-              <span className="block">A Private Archive of</span>
-              <span className="block text-ivory">Historic Arms</span>
-            </h1>
-            <p className="hero-enter-description mt-3 sm:mt-5 max-w-lg text-sm sm:text-base font-normal leading-relaxed text-[#E8E3D9] [text-shadow:0_1px_8px_rgba(0,0,0,0.7)] sm:text-lg">
-              Over one hundred and twenty hand-selected arms, each inspected, researched, and catalogued with its own history.
-            </p>
-            <div className="hero-enter-cta mt-6 sm:mt-8 flex flex-col gap-4 sm:flex-row">
-              <Link
-                to="/collection"
-                className="inline-flex w-full items-center justify-center gap-3 bg-brass px-8 py-3.5 sm:py-4 text-xs font-semibold tracking-[0.24em] uppercase text-obsidian transition-colors hover:bg-brass-light sm:w-auto"
-              >
-                VIEW COLLECTION <ArrowRight className="size-4" />
-              </Link>
-            </div>
+        <div className="mx-auto w-full max-w-7xl px-4 pt-3 pb-3 sm:px-6 sm:pt-32 sm:pb-4 lg:px-8 lg:pt-36 lg:pb-5">
+          <h1 className="sr-only">Armorer Firearms — A Private Archive of Historic Arms</h1>
+
+          <div className="hero-enter-cta flex justify-start sm:justify-end">
+            <Link
+              to="/collection"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-3 bg-brass px-8 py-3.5 sm:py-4 text-xs font-semibold tracking-[0.24em] uppercase text-obsidian transition-colors hover:bg-brass-light"
+            >
+              VIEW COLLECTION <ArrowRight className="size-4" />
+            </Link>
           </div>
 
-          <div className="hero-enter-stats mt-8 sm:mt-20 lg:mt-24 grid grid-cols-2 gap-4 border-y border-brass-border/80 py-4 sm:py-6 sm:grid-cols-3 sm:gap-6 sm:divide-x sm:divide-brass-border/80">
-            <div className="flex flex-col gap-1 sm:px-6 sm:first:pl-0">
-              <span className="font-serif text-2xl sm:text-3xl text-brass-light">120+</span>
+          <div className="hero-enter-stats mt-2.5 sm:mt-3 grid grid-cols-1 gap-2 border-y border-brass-border/80 py-2 sm:py-2.5 sm:grid-cols-2 sm:gap-6 sm:divide-x sm:divide-brass-border/80">
+            <div className="flex flex-col gap-0.5 sm:px-6 sm:first:pl-0">
+              <span className="font-serif text-2xl sm:text-3xl text-brass-light leading-tight">120+</span>
               <span className="text-xs font-medium tracking-[0.2em] uppercase text-parchment-dim">Curated Pieces</span>
             </div>
-            <div className="flex flex-col gap-1 sm:px-6">
-              <span className="font-serif text-2xl sm:text-3xl text-brass-light">1860 – 1945</span>
-              <span className="text-xs font-medium tracking-[0.2em] uppercase text-parchment-dim">Historical Span</span>
-            </div>
-            <div className="col-span-2 flex flex-col gap-1 border-t border-brass-border/50 pt-3 sm:col-span-1 sm:border-t-0 sm:pt-0 sm:px-6">
-              <span className="font-serif text-2xl sm:text-3xl text-brass-light light:text-brass-dark">Bigfork</span>
-              <span className="text-xs font-medium tracking-[0.2em] uppercase text-parchment-dim">Montana Armory</span>
+            <div className="flex flex-col gap-0.5 border-t border-brass-border/50 pt-2 sm:border-t-0 sm:pt-0 sm:px-6">
+              <span className="font-serif text-2xl sm:text-3xl text-brass-light light:text-brass-dark leading-tight">Bigfork, MT Armory</span>
+              <span className="text-xs font-medium tracking-[0.2em] uppercase text-parchment-dim">FFL # 9-81-029-01-9D-04359</span>
             </div>
           </div>
         </div>

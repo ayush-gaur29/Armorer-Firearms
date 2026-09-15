@@ -1,6 +1,7 @@
 Add-Type -AssemblyName System.Drawing
 
-$src = [System.Drawing.Bitmap]::FromFile("C:\Users\Uxdlab\Documents\GitHub\obsidian-archive\src\assets\logo.png")
+$rootDir = Split-Path -Parent $PSScriptRoot
+$src = [System.Drawing.Bitmap]::FromFile((Join-Path $rootDir "src\assets\logo.png"))
 Write-Output "Image size: $($src.Width) x $($src.Height)"
 
 # Sample down or check bounds
