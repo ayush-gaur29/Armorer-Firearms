@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import logoImg from "@/assets/logo.png";
+import { useWebsiteLogo } from "@/hooks/useArchive";
 
 export function BrandMark({
   className,
@@ -10,18 +10,30 @@ export function BrandMark({
   large?: boolean;
   hideText?: boolean;
 }) {
+  const { logoUrl } = useWebsiteLogo();
+
   return (
     <span className={cn("flex items-center gap-2.5 sm:gap-3", className)}>
-      <img
-        src={logoImg}
-        alt="Armorer Firearms"
-        width={large ? 54 : 40}
-        height={large ? 54 : 40}
-        className={cn(
-          "shrink-0 object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] transition-transform duration-300 hover:scale-105",
-          large ? "h-11 sm:h-13.5 w-auto" : "h-8.5 sm:h-9.5 md:h-10 w-auto",
-        )}
-      />
+      {logoUrl ? (
+        <img
+          src={logoUrl}
+          alt="Armorer Firearms"
+          width={large ? 54 : 40}
+          height={large ? 54 : 40}
+          className={cn(
+            "shrink-0 object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] transition-transform duration-300 hover:scale-105",
+            large ? "h-11 sm:h-13.5 w-auto" : "h-8.5 sm:h-9.5 md:h-10 w-auto",
+          )}
+        />
+      ) : (
+        <span
+          className={cn(
+            "shrink-0 inline-block aspect-square",
+            large ? "h-11 sm:h-13.5" : "h-8.5 sm:h-9.5 md:h-10",
+          )}
+          aria-hidden="true"
+        />
+      )}
       {!hideText && (
         <span className="flex min-w-0 items-center">
           <span

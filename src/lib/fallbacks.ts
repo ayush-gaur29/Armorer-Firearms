@@ -5,15 +5,27 @@ export const PLACEHOLDER_IMAGE = placeholderImg;
 
 export interface HeroSection {
   id: string;
-  title: string;
-  subtitle: string;
-  tagline?: string | undefined;
-  imageUrl: string;
+  brandTitle?: string | undefined;
+  brandSubtitle?: string | undefined;
+  armoryTitle?: string | undefined;
+  armorySubtitle?: string | undefined;
+  collectionFocusTitle?: string | undefined;
+  collectionFocusSubtitle?: string | undefined;
+  buttonText?: string | undefined;
+  buttonLink?: string | undefined;
+  backgroundImageUrl?: string | undefined;
   logoUrl?: string | undefined;
+  location?: string | undefined;
+  status?: string | undefined;
+  displayOrder?: number | undefined;
+  title?: string | undefined;
+  subtitle?: string | undefined;
+  tagline?: string | undefined;
+  imageUrl?: string | undefined;
   ctaPrimary?: string | undefined;
   ctaSecondary?: string | undefined;
   active?: boolean | undefined;
-  displayOrder?: number | undefined;
+  loading?: boolean | undefined;
 }
 
 export interface CollectionIntro {
@@ -22,13 +34,21 @@ export interface CollectionIntro {
 }
 
 export interface AboutContent {
-  heading: string;
-  story: string;
-  history: string;
-  founded: string | number;
-  location: string;
+  heading?: string | undefined;
+  title?: string | undefined;
+  story?: string | undefined;
+  description?: string | undefined;
+  history?: string | undefined;
+  founded?: string | number | undefined;
+  year?: string | number | undefined;
+  sinceText?: string | undefined;
+  location?: string | undefined;
+  locationText?: string | undefined;
+  imageUrl?: string | undefined;
+  deleted?: boolean | undefined;
   philosophy?: string | undefined;
   standards?: string | undefined;
+  loading?: boolean | undefined;
 }
 
 export interface ContactContent {
@@ -38,6 +58,16 @@ export interface ContactContent {
   email: string;
   hours: string;
   note?: string | undefined;
+}
+
+export interface TransferDeliveryMethod {
+  id: string;
+  title: string;
+  description: string;
+  order?: number | undefined;
+  status: string;
+  createdAt?: any;
+  updatedAt?: any;
 }
 
 export interface Firearm {
@@ -57,6 +87,9 @@ export interface Firearm {
   featured?: boolean | undefined;
   serial?: string | undefined;
   notes?: string | undefined;
+  shippingHandling?: number | string | undefined;
+  tax?: number | string | undefined;
+  miscFees?: number | string | undefined;
 }
 
 export const FALLBACK_HERO: HeroSection = {

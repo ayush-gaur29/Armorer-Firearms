@@ -86,6 +86,16 @@ function DetailPage() {
                 Collection
               </Link>
             </div>
+
+            <button
+              type="button"
+              onClick={() => setEditorOpen(true)}
+              className="inline-flex items-center gap-2 border border-brass-border/70 bg-obsidian-2 px-3 py-1.5 font-mono text-xs uppercase tracking-wider text-brass hover:border-brass hover:text-brass-light transition-colors cursor-pointer"
+              title="Configure firearm content and invoice charges in Firestore"
+            >
+              <Edit3 className="size-3.5" />
+              <span>Edit Record</span>
+            </button>
           </div>
 
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-12" data-reveal>

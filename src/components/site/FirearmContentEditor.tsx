@@ -21,6 +21,9 @@ export function FirearmContentEditor({ firearm, isOpen, onClose }: FirearmConten
   const [description, setDescription] = useState(firearm.description);
   const [history, setHistory] = useState(firearm.history ?? "");
   const [notes, setNotes] = useState(firearm.notes ?? "");
+  const [shippingHandling, setShippingHandling] = useState(String(firearm.shippingHandling ?? "0"));
+  const [tax, setTax] = useState(String(firearm.tax ?? "0"));
+  const [miscFees, setMiscFees] = useState(String(firearm.miscFees ?? "0"));
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -34,6 +37,9 @@ export function FirearmContentEditor({ firearm, isOpen, onClose }: FirearmConten
     setDescription(firearm.description);
     setHistory(firearm.history ?? "");
     setNotes(firearm.notes ?? "");
+    setShippingHandling(String(firearm.shippingHandling ?? "0"));
+    setTax(String(firearm.tax ?? "0"));
+    setMiscFees(String(firearm.miscFees ?? "0"));
   }, [firearm]);
 
   if (!isOpen) return null;
@@ -52,6 +58,24 @@ export function FirearmContentEditor({ firearm, isOpen, onClose }: FirearmConten
           : Number(price.replace(/[^0-9.]/g, ""))
         : null;
 
+      const parsedShipping = shippingHandling.trim()
+        ? isNaN(Number(shippingHandling.replace(/[^0-9.]/g, "")))
+          ? 0
+          : Number(shippingHandling.replace(/[^0-9.]/g, ""))
+        : 0;
+
+      const parsedTax = tax.trim()
+        ? isNaN(Number(tax.replace(/[^0-9.]/g, "")))
+          ? 0
+          : Number(tax.replace(/[^0-9.]/g, ""))
+        : 0;
+
+      const parsedMisc = miscFees.trim()
+        ? isNaN(Number(miscFees.replace(/[^0-9.]/g, "")))
+          ? 0
+          : Number(miscFees.replace(/[^0-9.]/g, ""))
+        : 0;
+
       await fs.updateDoc(ref, {
         name: name.trim(),
         maker: maker.trim(),
@@ -59,6 +83,9 @@ export function FirearmContentEditor({ firearm, isOpen, onClose }: FirearmConten
         caliber: caliber.trim(),
         year: year.trim(),
         ...(parsedPrice !== null ? { price: parsedPrice } : {}),
+        shippingHandling: parsedShipping,
+        tax: parsedTax,
+        miscFees: parsedMisc,
         condition: condition.trim(),
         description: description.trim(),
         history: history.trim(),
@@ -171,6 +198,56 @@ export function FirearmContentEditor({ firearm, isOpen, onClose }: FirearmConten
                 onChange={(e) => setYear(e.target.value)}
                 className="w-full border border-brass-border bg-obsidian-2 px-3.5 py-2.5 text-xs text-ivory placeholder:text-parchment-dim/50 focus:border-brass focus:outline-none"
               />
+            </div>
+          </div>
+
+          {/* Additional Invoice Charges */}
+          <div className="border border-brass-border/60 bg-obsidian-2/70 p-3.5 space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="font-mono text-xs uppercase tracking-wider text-brass font-medium">
+                Additional Invoice Charges (Configured per Item)
+              </label>
+              <span className="text-[0.68rem] font-mono text-parchment-dim">
+                Applied automatically at checkout
+              </span>
+            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div>
+                <label className="block font-mono text-[0.68rem] uppercase tracking-wider text-parchment-dim mb-1">
+                  Shipping &amp; Handling ($)
+                </label>
+                <input
+                  type="text"
+                  value={shippingHandling}
+                  onChange={(e) => setShippingHandling(e.target.value)}
+                  placeholder="e.g. 20"
+                  className="w-full border border-brass-border bg-obsidian px-3 py-2 text-xs text-ivory placeholder:text-parchment-dim/50 focus:border-brass focus:outline-none font-mono"
+                />
+              </div>
+              <div>
+                <label className="block font-mono text-[0.68rem] uppercase tracking-wider text-parchment-dim mb-1">
+                  Tax (if applicable) ($)
+                </label>
+                <input
+                  type="text"
+                  value={tax}
+                  onChange={(e) => setTax(e.target.value)}
+                  placeholder="e.g. 10"
+                  className="w-full border border-brass-border bg-obsidian px-3 py-2 text-xs text-ivory placeholder:text-parchment-dim/50 focus:border-brass focus:outline-none font-mono"
+                />
+              </div>
+              <div>
+                <label className="block font-mono text-[0.68rem] uppercase tracking-wider text-parchment-dim mb-1">
+                  Misc. Fees ($)
+                </label>
+                <input
+                  type="text"
+                  value={miscFees}
+                  onChange={(e) => setMiscFees(e.target.value)}
+                  placeholder="e.g. 5"
+                  className="w-full border border-brass-border bg-obsidian px-3 py-2 text-xs text-ivory placeholder:text-parchment-dim/50 focus:border-brass focus:outline-none font-mono"
+                />
+              </div>
             </div>
           </div>
 

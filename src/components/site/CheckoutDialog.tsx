@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/hooks/useCart";
 import { getDb } from "@/lib/firebase";
 import { formatPrice, accessionNo } from "@/lib/fallbacks";
@@ -10,25 +10,11 @@ import {
   Loader2,
   Printer,
   ExternalLink,
-  Settings2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "@tanstack/react-router";
-
-interface DeliveryMethodsConfig {
-  fflTitle: string;
-  fflDesc: string;
-  atelierTitle: string;
-  atelierDesc: string;
-}
-
-const DEFAULT_METHODS: DeliveryMethodsConfig = {
-  fflTitle: "Licensed FFL Transfer",
-  fflDesc: "Shipped in custom hard case to your preferred Federal Firearms Licensee.",
-  atelierTitle: "Montana Atelier Handover",
-  atelierDesc: "Private collection viewing and in-person transfer in Bigfork, MT.",
-};
+import { useTransferDeliveryMethods } from "@/hooks/useArchive";
 
 interface InvoiceItem {
   id: string;
@@ -46,7 +32,7 @@ interface InvoiceRecord {
   customerName: string;
   customerEmail: string;
   customerPhone: string;
-  transferType: "ffl" | "atelier";
+  transferType: string;
   transferTitle: string;
   transferDetails: string;
   shippingNotes: string;
@@ -71,26 +57,122 @@ export function CheckoutDialog() {
   const [email, setEmail] = useState(user?.email ?? "");
   const [phone, setPhone] = useState("");
 
-  // Transfer & Delivery methods (configurable by Armorer)
-  const [methods, setMethods] = useState<DeliveryMethodsConfig>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("armorer_delivery_methods");
-        if (saved) return JSON.parse(saved);
-      } catch { }
-    }
-    return DEFAULT_METHODS;
-  });
-  const [editingMethods, setEditingMethods] = useState(false);
-  const [draftMethods, setDraftMethods] = useState<DeliveryMethodsConfig>(methods);
-
-  const [transferType, setTransferType] = useState<"atelier" | "ffl">("ffl");
+  // Transfer & Delivery methods dynamically fetched from Firestore site_content/transfer_delivery
+  const { methods: deliveryMethods, loading: loadingMethods } = useTransferDeliveryMethods();
+  const [selectedMethodId, setSelectedMethodId] = useState<string>("");
   const [fflDetails, setFflDetails] = useState("");
 
-  // Additional Charges
-  const [shippingCharge, setShippingCharge] = useState<string>("0");
-  const [taxCharge, setTaxCharge] = useState<string>("0");
-  const [miscFeesCharge, setMiscFeesCharge] = useState<string>("0");
+  useEffect(() => {
+    if (deliveryMethods.length > 0) {
+      setSelectedMethodId((prev) => {
+        if (prev && deliveryMethods.some((m) => m.id === prev)) {
+          return prev;
+        }
+        return deliveryMethods[0]!.id;
+      });
+    }
+  }, [deliveryMethods]);
+
+  const selectedMethod = deliveryMethods.find((m) => m.id === selectedMethodId) ?? deliveryMethods[0];
+  const isFfl = Boolean(
+    selectedMethod &&
+    (selectedMethod.title.toLowerCase().includes("ffl") ||
+      selectedMethod.id.toLowerCase().includes("ffl") ||
+      selectedMethod.description.toLowerCase().includes("licensee"))
+  );
+
+  // Additional Charges dynamically fetched from the selected firearm's Firestore document
+  const [liveCharges, setLiveCharges] = useState<{
+    shippingHandling: number;
+    tax: number;
+    miscFees: number;
+  }>({ shippingHandling: 0, tax: 0, miscFees: 0 });
+
+  const toSafeNum = (val: unknown): number => {
+    if (typeof val === "number") return Number.isFinite(val) ? Math.max(0, val) : 0;
+    if (typeof val === "string") {
+      const parsed = Number(val.replace(/[^0-9.]/g, ""));
+      return Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
+    }
+    return 0;
+  };
+
+  useEffect(() => {
+    if (!isCheckoutOpen || items.length === 0) {
+      setLiveCharges({ shippingHandling: 0, tax: 0, miscFees: 0 });
+      return;
+    }
+
+    let unsubs: Array<() => void> = [];
+    let cancelled = false;
+
+    // Immediately compute initial charges from cart items to avoid delay
+    let initShip = 0;
+    let initTax = 0;
+    let initMisc = 0;
+    for (const item of items) {
+      initShip += toSafeNum(item.firearm.shippingHandling);
+      initTax += toSafeNum(item.firearm.tax);
+      initMisc += toSafeNum(item.firearm.miscFees);
+    }
+    setLiveCharges({ shippingHandling: initShip, tax: initTax, miscFees: initMisc });
+
+    // Live subscription to selected item(s) in Firestore for the latest admin-configured charges
+    Promise.all([getDb(), import("firebase/firestore")])
+      .then(([db, fs]) => {
+        if (cancelled) return;
+        const currentVals: Record<string, { shipping: number; tax: number; misc: number }> = {};
+
+        items.forEach((item) => {
+          const unsub = fs.onSnapshot(
+            fs.doc(db, "firearms", item.firearm.id),
+            (snap) => {
+              if (snap.exists()) {
+                const data = snap.data();
+                currentVals[item.firearm.id] = {
+                  shipping: toSafeNum(data.shippingHandling ?? data.shipping),
+                  tax: toSafeNum(data.tax),
+                  misc: toSafeNum(data.miscFees ?? data.misc),
+                };
+              } else {
+                currentVals[item.firearm.id] = {
+                  shipping: toSafeNum(item.firearm.shippingHandling),
+                  tax: toSafeNum(item.firearm.tax),
+                  misc: toSafeNum(item.firearm.miscFees),
+                };
+              }
+
+              let sumShip = 0;
+              let sumTax = 0;
+              let sumMisc = 0;
+              for (const v of Object.values(currentVals)) {
+                sumShip += v.shipping;
+                sumTax += v.tax;
+                sumMisc += v.misc;
+              }
+
+              setLiveCharges({
+                shippingHandling: sumShip,
+                tax: sumTax,
+                miscFees: sumMisc,
+              });
+            },
+            (err) => {
+              console.error("Error fetching live charges from Firestore:", err);
+            },
+          );
+          unsubs.push(unsub);
+        });
+      })
+      .catch((err) => {
+        console.error("Firestore connection error for checkout charges:", err);
+      });
+
+    return () => {
+      cancelled = true;
+      unsubs.forEach((u) => u());
+    };
+  }, [isCheckoutOpen, items]);
 
   // Shipping Notes (replaces Special Instructions / Curatorial Notes)
   const [notes, setNotes] = useState("");
@@ -105,21 +187,12 @@ export function CheckoutDialog() {
 
   if (!isCheckoutOpen) return null;
 
-  const numShipping = Math.max(0, parseFloat(shippingCharge) || 0);
-  const numTax = Math.max(0, parseFloat(taxCharge) || 0);
-  const numMisc = Math.max(0, parseFloat(miscFeesCharge) || 0);
-  const finalTotal = totalPrice + numShipping + numTax + numMisc;
-
-  const handleSaveMethods = () => {
-    setMethods(draftMethods);
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem("armorer_delivery_methods", JSON.stringify(draftMethods));
-      } catch { }
-    }
-    setEditingMethods(false);
-    toast.success("Delivery methods updated by Armorer.");
-  };
+  const numShipping = liveCharges.shippingHandling;
+  const numTax = liveCharges.tax;
+  const numMisc = liveCharges.miscFees;
+  // Subtotal = Item Price + Applicable Additional Invoice Charges from Firestore
+  const subtotal = totalPrice + numShipping + numTax + numMisc;
+  const finalTotal = subtotal;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -155,10 +228,11 @@ export function CheckoutDialog() {
       customerName: name.trim(),
       customerEmail: email.trim(),
       customerPhone: phone.trim(),
-      transferType,
-      transferTitle: transferType === "ffl" ? methods.fflTitle : methods.atelierTitle,
-      transferDetails:
-        transferType === "ffl" ? fflDetails.trim() : "Montana Atelier Handover (Bigfork, MT)",
+      transferType: isFfl ? "ffl" : "atelier",
+      transferTitle: selectedMethod ? selectedMethod.title : "Transfer & Delivery",
+      transferDetails: isFfl
+        ? (fflDetails.trim() || "Preferred FFL Dealer")
+        : (selectedMethod?.description || "In-person collection viewing and transfer in Bigfork, MT"),
       shippingNotes: notes.trim(),
       items: invoiceItems,
       cartSubtotal: totalPrice,
@@ -250,7 +324,7 @@ export function CheckoutDialog() {
             <div className="mt-5 border border-brass-border/40 bg-obsidian-2/60 p-4">
               <div className="flex items-center justify-between text-xs font-mono tracking-wider uppercase text-parchment-dim mb-2">
                 <span>Selected Pieces ({items.length})</span>
-                <span className="text-brass">Subtotal: {formatPrice(totalPrice)}</span>
+                <span className="text-brass">Subtotal: {formatPrice(subtotal)}</span>
               </div>
               <div className="space-y-1.5 max-h-32 overflow-y-auto pr-1">
                 {items.map((it) => (
@@ -310,111 +384,48 @@ export function CheckoutDialog() {
                 />
               </div>
 
-              {/* Transfer & Delivery Method (Editable / Configurable by Armorer) */}
+              {/* Transfer & Delivery Method (Dynamically fetched from site_content/transfer_delivery) */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="font-mono text-xs uppercase tracking-wider text-parchment-dim">
                     Transfer &amp; Delivery Method
                   </label>
-
                 </div>
 
-                {/* Armorer Configuration Panel */}
-                {editingMethods && (
-                  <div className="mb-3 border border-brass/50 bg-obsidian-2 p-3.5 space-y-3">
-                    <p className="font-mono text-[0.7rem] uppercase tracking-wider text-brass font-medium">
-                      Armorer Method Configuration
-                    </p>
-                    <div className="space-y-2">
-                      <label className="block font-mono text-[0.65rem] uppercase tracking-wider text-parchment-dim">
-                        Method 1 (FFL Transfer) Title &amp; Description
-                      </label>
-                      <input
-                        type="text"
-                        value={draftMethods.fflTitle}
-                        onChange={(e) =>
-                          setDraftMethods({ ...draftMethods, fflTitle: e.target.value })
-                        }
-                        className="w-full border border-brass-border bg-obsidian-3 px-2.5 py-1.5 text-xs text-ivory focus:border-brass focus:outline-none"
-                      />
-                      <input
-                        type="text"
-                        value={draftMethods.fflDesc}
-                        onChange={(e) =>
-                          setDraftMethods({ ...draftMethods, fflDesc: e.target.value })
-                        }
-                        className="w-full border border-brass-border bg-obsidian-3 px-2.5 py-1.5 text-xs text-ivory focus:border-brass focus:outline-none"
-                      />
-                    </div>
-                    <div className="space-y-2 pt-1 border-t border-brass-border/40">
-                      <label className="block font-mono text-[0.65rem] uppercase tracking-wider text-parchment-dim">
-                        Method 2 (Atelier Handover) Title &amp; Description
-                      </label>
-                      <input
-                        type="text"
-                        value={draftMethods.atelierTitle}
-                        onChange={(e) =>
-                          setDraftMethods({ ...draftMethods, atelierTitle: e.target.value })
-                        }
-                        className="w-full border border-brass-border bg-obsidian-3 px-2.5 py-1.5 text-xs text-ivory focus:border-brass focus:outline-none"
-                      />
-                      <input
-                        type="text"
-                        value={draftMethods.atelierDesc}
-                        onChange={(e) =>
-                          setDraftMethods({ ...draftMethods, atelierDesc: e.target.value })
-                        }
-                        className="w-full border border-brass-border bg-obsidian-3 px-2.5 py-1.5 text-xs text-ivory focus:border-brass focus:outline-none"
-                      />
-                    </div>
-                    <div className="flex justify-end pt-1">
-                      <button
-                        type="button"
-                        onClick={handleSaveMethods}
-                        className="border border-brass bg-brass/20 px-3 py-1 text-xs font-mono uppercase text-brass hover:bg-brass hover:text-obsidian transition-colors cursor-pointer"
-                      >
-                        Save Configuration
-                      </button>
-                    </div>
+                {/* The Delivery Method Boxes */}
+                {loadingMethods ? (
+                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                    <div className="border border-brass-border/40 bg-obsidian-2/50 p-3 min-h-[76px] animate-pulse" />
+                    <div className="border border-brass-border/40 bg-obsidian-2/50 p-3 min-h-[76px] animate-pulse" />
                   </div>
-                )}
-
-                {/* The Two Delivery Method Boxes */}
-                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                  <button
-                    type="button"
-                    onClick={() => setTransferType("ffl")}
-                    className={`border p-3 text-left transition-all cursor-pointer ${transferType === "ffl"
-                      ? "border-brass bg-brass/10 text-ivory"
-                      : "border-brass-border bg-obsidian-2 text-parchment-dim hover:border-brass-border-strong"
-                      }`}
-                  >
-                    <p className="font-mono text-xs font-semibold uppercase text-brass">
-                      {methods.fflTitle}
-                    </p>
-                    <p className="mt-1 text-[0.75rem] text-parchment-dim leading-snug">
-                      {methods.fflDesc}
-                    </p>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setTransferType("atelier")}
-                    className={`border p-3 text-left transition-all cursor-pointer ${transferType === "atelier"
-                      ? "border-brass bg-brass/10 text-ivory"
-                      : "border-brass-border bg-obsidian-2 text-parchment-dim hover:border-brass-border-strong"
-                      }`}
-                  >
-                    <p className="font-mono text-xs font-semibold uppercase text-brass">
-                      {methods.atelierTitle}
-                    </p>
-                    <p className="mt-1 text-[0.75rem] text-parchment-dim leading-snug">
-                      {methods.atelierDesc}
-                    </p>
-                  </button>
-                </div>
+                ) : deliveryMethods.length > 0 ? (
+                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                    {deliveryMethods.map((method) => {
+                      const isSelected = selectedMethod?.id === method.id;
+                      return (
+                        <button
+                          key={method.id}
+                          type="button"
+                          onClick={() => setSelectedMethodId(method.id)}
+                          className={`border p-3 text-left transition-all cursor-pointer ${isSelected
+                            ? "border-brass bg-brass/10 text-ivory"
+                            : "border-brass-border bg-obsidian-2 text-parchment-dim hover:border-brass-border-strong"
+                            }`}
+                        >
+                          <p className="font-mono text-xs font-semibold uppercase text-brass">
+                            {method.title}
+                          </p>
+                          <p className="mt-1 text-[0.75rem] text-parchment-dim leading-snug">
+                            {method.description}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : null}
               </div>
 
-              {transferType === "ffl" && (
+              {isFfl && (
                 <div>
                   <label className="block font-mono text-xs uppercase tracking-wider text-parchment-dim mb-1">
                     Preferred FFL Dealer Name, City &amp; State
@@ -444,43 +455,25 @@ export function CheckoutDialog() {
                     <label className="block font-mono text-[0.68rem] uppercase tracking-wider text-parchment-dim mb-1">
                       Shipping &amp; Handling ($)
                     </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="any"
-                      value={shippingCharge}
-                      onChange={(e) => setShippingCharge(e.target.value)}
-                      placeholder="0"
-                      className="w-full border border-brass-border bg-obsidian px-3 py-2 text-xs text-ivory placeholder:text-parchment-dim/50 focus:border-brass focus:outline-none"
-                    />
+                    <div className="w-full border border-brass-border/80 bg-obsidian px-3 py-2 text-xs font-mono text-ivory flex items-center min-h-[38px] select-none">
+                      ${numShipping.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                    </div>
                   </div>
                   <div>
                     <label className="block font-mono text-[0.68rem] uppercase tracking-wider text-parchment-dim mb-1">
                       Tax (if applicable) ($)
                     </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="any"
-                      value={taxCharge}
-                      onChange={(e) => setTaxCharge(e.target.value)}
-                      placeholder="0"
-                      className="w-full border border-brass-border bg-obsidian px-3 py-2 text-xs text-ivory placeholder:text-parchment-dim/50 focus:border-brass focus:outline-none"
-                    />
+                    <div className="w-full border border-brass-border/80 bg-obsidian px-3 py-2 text-xs font-mono text-ivory flex items-center min-h-[38px] select-none">
+                      ${numTax.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                    </div>
                   </div>
                   <div>
                     <label className="block font-mono text-[0.68rem] uppercase tracking-wider text-parchment-dim mb-1">
                       Misc. Fees ($)
                     </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="any"
-                      value={miscFeesCharge}
-                      onChange={(e) => setMiscFeesCharge(e.target.value)}
-                      placeholder="0"
-                      className="w-full border border-brass-border bg-obsidian px-3 py-2 text-xs text-ivory placeholder:text-parchment-dim/50 focus:border-brass focus:outline-none"
-                    />
+                    <div className="w-full border border-brass-border/80 bg-obsidian px-3 py-2 text-xs font-mono text-ivory flex items-center min-h-[38px] select-none">
+                      ${numMisc.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                    </div>
                   </div>
                 </div>
               </div>

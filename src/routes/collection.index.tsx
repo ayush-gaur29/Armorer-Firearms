@@ -8,8 +8,8 @@ import {
   Check,
   Sparkles,
 } from "lucide-react";
-import { useMemo, useState } from "react";
-import { useFirearms } from "@/hooks/useArchive";
+import { useEffect, useMemo, useState } from "react";
+import { useFirearms, useCategories } from "@/hooks/useArchive";
 import { FirearmCard, FirearmCardSkeleton } from "@/components/site/FirearmCard";
 import { BackButton } from "@/components/site/BackButton";
 import { cn } from "@/lib/utils";
@@ -43,7 +43,9 @@ const toNum = (v: unknown) => {
 };
 
 function CollectionPage() {
-  const { firearms, loading } = useFirearms();
+  const { firearms, loading: firearmsLoading } = useFirearms();
+  const { categories, loading: categoriesLoading } = useCategories();
+  const loading = firearmsLoading || categoriesLoading;
   const [q, setQ] = useState("");
   const [category, setCategory] = useState("");
   const [maker, setMaker] = useState("");
@@ -52,11 +54,18 @@ function CollectionPage() {
   const [sort, setSort] = useState<SortKey>("year-asc");
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  // Dynamic filter options based on available firearms
-  const categories = useMemo(
-    () => Array.from(new Set(firearms.map((f) => f.category).filter(Boolean))).sort(),
-    [firearms],
-  );
+  // If a category was selected but no longer exists in Firestore categories, reset to all pieces
+  useEffect(() => {
+    if (
+      category &&
+      !categoriesLoading &&
+      categories.length > 0 &&
+      !categories.some((c) => c.toLowerCase().trim() === category.toLowerCase().trim())
+    ) {
+      setCategory("");
+    }
+  }, [category, categories, categoriesLoading]);
+
   const makers = useMemo(
     () => Array.from(new Set(firearms.map((f) => f.maker).filter(Boolean))).sort(),
     [firearms],
@@ -73,7 +82,12 @@ function CollectionPage() {
   const matchesCategory = (itemCategory: string | undefined, selectedCategory: string) => {
     if (!selectedCategory) return true;
     if (!itemCategory) return false;
-    return itemCategory.toLowerCase().trim() === selectedCategory.toLowerCase().trim();
+    const sel = selectedCategory.toLowerCase().trim();
+    const item = itemCategory.toLowerCase().trim();
+    if (sel === item) return true;
+    // Handle composite categories such as "Pistols Revolvers" matching "Pistols" or "Revolvers"
+    if (sel.includes(item) || item.includes(sel)) return true;
+    return false;
   };
 
   // Filter & Sort Results
@@ -191,21 +205,24 @@ function CollectionPage() {
             >
               All Pieces
             </button>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setCategory(category === cat ? "" : cat)}
-                className={cn(
-                  "shrink-0 whitespace-nowrap px-3 py-1.5 font-mono text-[0.68rem] tracking-[0.14em] uppercase transition-colors border cursor-pointer",
-                  category === cat
-                    ? "border-brass bg-brass text-obsidian font-bold"
-                    : "border-brass-border/60 bg-obsidian-2/80 text-parchment-dim hover:border-brass hover:text-ivory"
-                )}
-              >
-                {cat}
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const active = category.toLowerCase().trim() === cat.toLowerCase().trim();
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setCategory(active ? "" : cat)}
+                  className={cn(
+                    "shrink-0 whitespace-nowrap px-3 py-1.5 font-mono text-[0.68rem] tracking-[0.14em] uppercase transition-colors border cursor-pointer",
+                    active
+                      ? "border-brass bg-brass text-obsidian font-bold"
+                      : "border-brass-border/60 bg-obsidian-2/80 text-parchment-dim hover:border-brass hover:text-ivory"
+                  )}
+                >
+                  {cat}
+                </button>
+              );
+            })}
           </div>
 
           {/* Desktop Search & Filters */}
@@ -449,7 +466,9 @@ function CollectionPage() {
                   title="Category"
                   selected={category}
                   options={categories}
-                  onSelect={(val) => setCategory(category === val ? "" : val)}
+                  onSelect={(val) =>
+                    setCategory(category.toLowerCase().trim() === val.toLowerCase().trim() ? "" : val)
+                  }
                 />
                 <MobileFilterSection
                   title="Maker"
@@ -569,7 +588,7 @@ function MobileFilterSection({
       </p>
       <div className="flex flex-wrap gap-2">
         {options.map((opt) => {
-          const isSelected = selected === opt;
+          const isSelected = selected.toLowerCase().trim() === opt.toLowerCase().trim();
           return (
             <button
               key={opt}
