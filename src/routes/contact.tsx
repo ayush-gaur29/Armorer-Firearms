@@ -65,7 +65,7 @@ function ContactPage() {
             <BackButton fallbackTo="/" label="Back to Archive" />
             <div className="flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-brass-dark uppercase">
               <MapPin className="size-3.5 text-brass" aria-hidden />
-              <span>Bigfork, Montana · 48.0633° N, 114.0724° W</span>
+              <span>Bigfork, Montana ·48°03'47.9"N 114°04'20.6"W</span>
             </div>
           </div>
 

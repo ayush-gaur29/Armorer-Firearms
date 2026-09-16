@@ -133,7 +133,7 @@ function AboutPage() {
                 <span className="text-brass/40">·</span>
                 <span>{about.location || "BIGFORK, MONTANA"}</span>
                 <span className="text-brass/40 hidden sm:inline">·</span>
-                <span className="hidden sm:inline">48.0633° N, 114.0724° W</span>
+                <span className="hidden sm:inline">48°03'47.9"N, 114°04'20.6"W</span>
               </div>
 
               <div className="hairline my-5 sm:my-6 max-w-md" />
