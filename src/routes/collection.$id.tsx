@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, ShoppingBag, Edit3, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, ShoppingBag, Edit3, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFirearm, useFirearms } from "@/hooks/useArchive";
 import { accessionNo, formatPrice } from "@/lib/fallbacks";
@@ -105,6 +105,49 @@ function DetailPage() {
                 <span className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-obsidian/95 px-2.5 py-1 font-mono text-xs tracking-[0.16em] text-brass backdrop-blur border border-brass-border/40 shadow-sm">
                   ITEM # {accessionNo(firearm.id)}
                 </span>
+
+                {/* Photo Navigation Arrows */}
+                {firearm.images.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setActive((prev) => Math.max(0, prev - 1))}
+                      disabled={active === 0}
+                      aria-label="Previous photo"
+                      className={cn(
+                        "absolute left-2.5 sm:left-4 top-1/2 -translate-y-1/2 z-10",
+                        "flex items-center justify-center size-9 sm:size-10",
+                        "border border-brass-border/60 bg-obsidian/85 text-parchment backdrop-blur-xs",
+                        "transition-all duration-200",
+                        "hover:border-brass hover:text-brass hover:bg-obsidian",
+                        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass",
+                        "disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:border-brass-border/60 disabled:hover:text-parchment disabled:hover:bg-obsidian/85",
+                        "cursor-pointer",
+                      )}
+                    >
+                      <ChevronLeft className="size-5 sm:size-6 stroke-[1.75]" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setActive((prev) => Math.min(firearm.images.length - 1, prev + 1))}
+                      disabled={active >= firearm.images.length - 1}
+                      aria-label="Next photo"
+                      className={cn(
+                        "absolute right-2.5 sm:right-4 top-1/2 -translate-y-1/2 z-10",
+                        "flex items-center justify-center size-9 sm:size-10",
+                        "border border-brass-border/60 bg-obsidian/85 text-parchment backdrop-blur-xs",
+                        "transition-all duration-200",
+                        "hover:border-brass hover:text-brass hover:bg-obsidian",
+                        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass",
+                        "disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:border-brass-border/60 disabled:hover:text-parchment disabled:hover:bg-obsidian/85",
+                        "cursor-pointer",
+                      )}
+                    >
+                      <ChevronRight className="size-5 sm:size-6 stroke-[1.75]" />
+                    </button>
+                  </>
+                )}
               </div>
 
               {/* Thumbnails */}
