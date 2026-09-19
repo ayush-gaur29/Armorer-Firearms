@@ -67,7 +67,7 @@ export function FirearmCard({ firearm }: { firearm: Firearm }) {
       className="group flex h-full flex-col border border-brass-border/70 bg-[#16181B] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brass/50 hover:bg-[#1A1D21] hover:shadow-vault focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass"
     >
       {/* Museum Archive Photography Presentation */}
-      <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full overflow-hidden bg-gradient-to-b from-[#FAF8F5] via-[#F2EFE9] to-[#E5E0D8] border-b border-brass-border/60 flex items-center justify-center p-3 sm:p-4">
+      <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full overflow-hidden bg-gradient-to-b from-obsidian-3 via-obsidian-2 to-obsidian border-b border-brass-border/60 flex items-center justify-center p-3 sm:p-4">
         <ArchiveImage
           src={firearm.images[0]}
           alt={firearm.name}
@@ -76,7 +76,7 @@ export function FirearmCard({ firearm }: { firearm: Firearm }) {
         />
         {/* Subtle border vignette for depth */}
         <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_15px_rgba(0,0,0,0.06)]" />
-        <span className="absolute top-3 left-3 border border-brass-border/50 bg-obsidian/90 px-2 py-0.5 font-mono text-[0.62rem] tracking-[0.16em] text-brass backdrop-blur-md">
+        <span className="absolute top-3 left-3 border border-brass-border/50 bg-obsidian/90 px-2 py-0.5 font-mono text-[0.72rem] tracking-[0.16em] text-brass backdrop-blur-md whitespace-nowrap">
           Item # {accessionNo(firearm.id)}
         </span>
       </div>

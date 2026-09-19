@@ -48,7 +48,7 @@ function HomePage() {
             }}
           />
         </div>
-        <div className="mx-auto w-full max-w-7xl px-4 pt-3 pb-3 sm:px-6 sm:pt-32 sm:pb-4 lg:px-8 lg:pt-36 lg:pb-5">
+        <div className="mx-auto w-full max-w-7xl px-4 pt-3 pb-1.5 sm:px-6 sm:pt-32 sm:pb-2 lg:px-8 lg:pt-36 lg:pb-2.5">
           <h1 className="sr-only">
             {hero.brandTitle && hero.brandSubtitle
               ? `${hero.brandTitle} — ${hero.brandSubtitle}`
@@ -64,8 +64,8 @@ function HomePage() {
             </Link>
           </div>
 
-          <div className="hero-enter-stats mt-2.5 sm:mt-3 grid grid-cols-1 gap-2 border-y border-brass-border/80 py-2 sm:py-2.5 sm:grid-cols-2 sm:gap-6 sm:divide-x sm:divide-brass-border/80">
-            <div className="flex flex-col gap-0.5 sm:px-6 sm:first:pl-0">
+          <div className="hero-enter-stats mt-2 sm:mt-2.5 grid grid-cols-1 gap-1.5 border-y border-brass-border/80 py-1 sm:py-1.5 sm:grid-cols-2 sm:gap-6 sm:divide-x sm:divide-brass-border/80">
+            <div className="flex flex-col items-center text-center gap-0.5 sm:px-6">
               <span className="font-serif text-2xl sm:text-3xl text-brass-light leading-tight">
                 {hero.collectionFocusTitle || "\u00A0"}
               </span>
@@ -73,7 +73,7 @@ function HomePage() {
                 {hero.collectionFocusSubtitle || "\u00A0"}
               </span>
             </div>
-            <div className="flex flex-col gap-0.5 border-t border-brass-border/50 pt-2 sm:border-t-0 sm:pt-0 sm:px-6">
+            <div className="flex flex-col items-center text-center gap-0.5 border-t border-brass-border/50 pt-1.5 sm:border-t-0 sm:pt-0 sm:px-6">
               <span className="font-serif text-2xl sm:text-3xl text-brass-light light:text-brass-dark leading-tight">
                 {hero.armoryTitle || "\u00A0"}
               </span>

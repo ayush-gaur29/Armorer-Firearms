@@ -93,7 +93,7 @@ function DetailPage() {
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-12" data-reveal>
             {/* Gallery */}
             <div className="lg:col-span-7">
-              <div className="relative aspect-[16/10] sm:aspect-[4/3] overflow-hidden border border-brass-border bg-gradient-to-b from-[#FAF8F5] via-[#F2EFE9] to-[#E5E0D8] p-4 sm:p-6 flex items-center justify-center shadow-vault">
+              <div className="relative aspect-[16/10] sm:aspect-[4/3] overflow-hidden border border-brass-border bg-gradient-to-b from-obsidian-3 via-obsidian-2 to-obsidian p-4 sm:p-6 flex items-center justify-center shadow-vault">
                 <ArchiveImage
                   key={firearm.images[active]}
                   src={firearm.images[active]}
@@ -102,7 +102,7 @@ function DetailPage() {
                   contain
                   className="animate-in fade-in duration-500 h-full w-full object-contain drop-shadow-[0_6px_16px_rgba(0,0,0,0.16)]"
                 />
-                <span className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-obsidian/95 px-2.5 py-1 font-mono text-xs tracking-[0.16em] text-brass backdrop-blur border border-brass-border/40 shadow-sm">
+                <span className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-obsidian/95 px-2.5 py-1 font-mono text-[0.82rem] tracking-[0.16em] text-brass backdrop-blur border border-brass-border/40 shadow-sm whitespace-nowrap">
                   ITEM # {accessionNo(firearm.id)}
                 </span>
 
